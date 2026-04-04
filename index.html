@@ -1,0 +1,1006 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تقرير تحليل النسبة الموزونة للطلاب المنتظمين</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #1a73e8;
+            --primary-dark: #1557b0;
+            --secondary: #34a853;
+            --accent: #ea4335;
+            --warning: #fbbc04;
+            --bg: #f0f4f8;
+            --card-bg: #ffffff;
+            --text: #1f2937;
+            --text-light: #6b7280;
+            --shadow: 0 4px 24px rgba(0,0,0,0.08);
+            --shadow-hover: 0 8px 40px rgba(0,0,0,0.15);
+            --radius: 16px;
+            --gradient-1: linear-gradient(135deg, #1a73e8 0%, #4285f4 100%);
+            --gradient-2: linear-gradient(135deg, #34a853 0%, #57d474 100%);
+            --gradient-3: linear-gradient(135deg, #ea4335 0%, #f06d60 100%);
+            --gradient-4: linear-gradient(135deg, #fbbc04 0%, #fdd663 100%);
+            --gradient-bg: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.8;
+            overflow-x: hidden;
+        }
+
+        /* ===== HERO ===== */
+        .hero {
+            background: var(--gradient-bg);
+            padding: 60px 20px 50px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .hero::before {
+            content: '';
+            position: absolute; top: -50%; left: -50%;
+            width: 200%; height: 200%;
+            background: radial-gradient(circle, rgba(26,115,232,0.15) 0%, transparent 50%);
+            animation: heroGlow 8s ease-in-out infinite;
+        }
+        @keyframes heroGlow {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(30px, -20px); }
+        }
+        .hero-content { position: relative; z-index: 1; max-width: 900px; margin: 0 auto; }
+        .hero h1 {
+            color: #fff; font-size: 2.4rem; font-weight: 800; margin-bottom: 12px;
+            opacity: 0; animation: fadeInUp .8s ease forwards .2s;
+            text-shadow: 0 2px 20px rgba(0,0,0,.3);
+        }
+        .hero p {
+            color: #94a3b8; font-size: 1.15rem;
+            opacity: 0; animation: fadeInUp .8s ease forwards .5s;
+        }
+        .hero-badges {
+            display: flex; justify-content: center; gap: 15px;
+            margin-top: 25px; flex-wrap: wrap;
+            opacity: 0; animation: fadeInUp .8s ease forwards .8s;
+        }
+        .hero-badge {
+            background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.15);
+            color: #e2e8f0; padding: 8px 20px; border-radius: 50px;
+            font-size: .9rem; backdrop-filter: blur(10px); transition: all .3s;
+        }
+        .hero-badge:hover { background: rgba(255,255,255,.15); transform: translateY(-2px); }
+
+        /* ===== ANIMATIONS ===== */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes shimmer {
+            0% { background-position: -200% center; }
+            100% { background-position: 200% center; }
+        }
+        @keyframes floatParticle {
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 1; } 90% { opacity: 1; }
+            100% { transform: translateY(-100px) rotate(720deg); opacity: 0; }
+        }
+        .animate-on-scroll {
+            opacity: 0; transform: translateY(30px);
+            transition: all .7s cubic-bezier(.4,0,.2,1);
+        }
+        .animate-on-scroll.visible { opacity: 1; transform: translateY(0); }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+
+        /* ===== SUMMARY ===== */
+        .summary-section { margin-top: -40px; position: relative; z-index: 10; padding-bottom: 40px; }
+        .summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; }
+        .summary-card {
+            background: var(--card-bg); border-radius: var(--radius);
+            padding: 28px 24px; box-shadow: var(--shadow); text-align: center;
+            transition: all .4s cubic-bezier(.4,0,.2,1);
+            border: 1px solid rgba(0,0,0,.04); position: relative; overflow: hidden;
+        }
+        .summary-card::before {
+            content: ''; position: absolute; top: 0; right: 0; left: 0; height: 4px;
+            border-radius: var(--radius) var(--radius) 0 0;
+        }
+        .summary-card:nth-child(1)::before { background: var(--gradient-1); }
+        .summary-card:nth-child(2)::before { background: var(--gradient-2); }
+        .summary-card:nth-child(3)::before { background: var(--gradient-3); }
+        .summary-card:nth-child(4)::before { background: var(--gradient-4); }
+        .summary-card:nth-child(5)::before { background: var(--gradient-1); }
+        .summary-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-hover); }
+        .summary-card .icon {
+            width: 52px; height: 52px; border-radius: 14px;
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 14px; font-size: 1.5rem;
+        }
+        .summary-card:nth-child(1) .icon { background: #e8f0fe; color: var(--primary); }
+        .summary-card:nth-child(2) .icon { background: #e6f4ea; color: var(--secondary); }
+        .summary-card:nth-child(3) .icon { background: #fce8e6; color: var(--accent); }
+        .summary-card:nth-child(4) .icon { background: #fef7e0; color: #e37400; }
+        .summary-card:nth-child(5) .icon { background: #e8f0fe; color: var(--primary); }
+        .summary-card .value { font-size: 2rem; font-weight: 800; color: var(--text); line-height: 1.2; }
+        .summary-card .label { font-size: .88rem; color: var(--text-light); margin-top: 6px; font-weight: 500; }
+
+        /* ===== SECTIONS ===== */
+        .section { padding: 50px 0; }
+        .section-header { text-align: center; margin-bottom: 40px; }
+        .section-header h2 { font-size: 1.8rem; font-weight: 800; margin-bottom: 8px; }
+        .section-header p { color: var(--text-light); font-size: 1rem; }
+        .section-header .line {
+            width: 60px; height: 4px; background: var(--gradient-1);
+            border-radius: 2px; margin: 16px auto 0;
+        }
+
+        /* ===== CHART CARDS ===== */
+        .chart-card {
+            background: var(--card-bg); border-radius: var(--radius);
+            box-shadow: var(--shadow); padding: 30px; margin-bottom: 30px;
+            border: 1px solid rgba(0,0,0,.04); transition: all .3s;
+        }
+        .chart-card:hover { box-shadow: var(--shadow-hover); }
+        .chart-card h3 { font-size: 1.2rem; font-weight: 700; margin-bottom: 6px; }
+        .chart-card .subtitle { color: var(--text-light); font-size: .88rem; margin-bottom: 24px; }
+        .chart-container { position: relative; width: 100%; max-height: 400px; }
+        .chart-row { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+
+        @media (max-width: 768px) {
+            .chart-row { grid-template-columns: 1fr; }
+            .hero h1 { font-size: 1.6rem; }
+            .summary-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        /* ===== TABS ===== */
+        .year-tabs { display: flex; justify-content: center; gap: 12px; margin-bottom: 30px; flex-wrap: wrap; }
+        .year-tab {
+            padding: 10px 28px; border: 2px solid #e5e7eb; border-radius: 50px;
+            font-family: 'Tajawal', sans-serif; font-size: .95rem; font-weight: 600;
+            background: var(--card-bg); color: var(--text-light);
+            cursor: pointer; transition: all .3s;
+        }
+        .year-tab:hover { border-color: var(--primary); color: var(--primary); }
+        .year-tab.active {
+            background: var(--primary); border-color: var(--primary); color: #fff;
+            box-shadow: 0 4px 15px rgba(26,115,232,.35);
+        }
+
+        /* ===== TABLE ===== */
+        .stats-table {
+            width: 100%; border-collapse: separate; border-spacing: 0;
+            border-radius: 12px; overflow: hidden; box-shadow: var(--shadow);
+        }
+        .stats-table thead th {
+            background: var(--gradient-1); color: white;
+            padding: 16px 20px; font-weight: 700; text-align: center; font-size: .95rem;
+        }
+        .stats-table tbody td {
+            padding: 14px 20px; text-align: center;
+            border-bottom: 1px solid #f1f5f9; font-size: .95rem; transition: background .2s;
+        }
+        .stats-table tbody tr:hover td { background: #f8fafc; }
+        .stats-table tbody tr:last-child td { border-bottom: none; }
+        .hl-green { color: var(--secondary); font-weight: 700; }
+        .hl-red { color: var(--accent); font-weight: 700; }
+        .hl-blue { color: var(--primary); font-weight: 700; }
+        .hl-orange { color: #e37400; font-weight: 700; }
+        .cumulative-wrapper { overflow-x: auto; border-radius: 12px; }
+
+        /* ===== INSIGHT BOXES ===== */
+        .insight-box {
+            background: var(--card-bg); border-radius: var(--radius);
+            padding: 28px; margin-bottom: 20px; box-shadow: var(--shadow);
+            border-right: 5px solid; display: flex;
+            align-items: flex-start; gap: 18px; transition: all .3s;
+        }
+        .insight-box:hover { transform: translateX(-5px); box-shadow: var(--shadow-hover); }
+        .insight-box.blue { border-right-color: var(--primary); }
+        .insight-box.green { border-right-color: var(--secondary); }
+        .insight-box.red { border-right-color: var(--accent); }
+        .insight-box.orange { border-right-color: #e37400; }
+        .insight-icon {
+            width: 44px; height: 44px; border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.3rem; flex-shrink: 0;
+        }
+        .insight-box.blue .insight-icon { background: #e8f0fe; }
+        .insight-box.green .insight-icon { background: #e6f4ea; }
+        .insight-box.red .insight-icon { background: #fce8e6; }
+        .insight-box.orange .insight-icon { background: #fef7e0; }
+        .insight-text h4 { font-size: 1.05rem; font-weight: 700; margin-bottom: 6px; }
+        .insight-text p { font-size: .92rem; color: var(--text-light); line-height: 1.8; }
+
+        /* ===== PROGRESS BARS ===== */
+        .progress-item { margin-bottom: 22px; }
+        .progress-label { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: .9rem; }
+        .progress-label span:first-child { font-weight: 600; color: var(--text); }
+        .progress-label span:last-child { color: var(--text-light); font-weight: 500; }
+        .progress-bar { width: 100%; height: 12px; background: #f1f5f9; border-radius: 6px; overflow: hidden; }
+        .progress-fill {
+            height: 100%; border-radius: 6px;
+            transition: width 1.5s cubic-bezier(.4,0,.2,1);
+            width: 0; position: relative;
+        }
+        .progress-fill::after {
+            content: ''; position: absolute; top: 0; right: 0;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,.3), transparent);
+            background-size: 200% 100%; animation: shimmer 2s infinite;
+        }
+        .progress-fill.blue { background: var(--gradient-1); }
+        .progress-fill.green { background: var(--gradient-2); }
+        .progress-fill.orange { background: var(--gradient-4); }
+
+        /* ===== GAUGE ===== */
+        .gauge-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 18px; margin-top: 20px; }
+        .gauge-item {
+            text-align: center; padding: 20px; background: #f8fafc;
+            border-radius: 12px; border: 1px solid #e2e8f0; transition: all .3s;
+        }
+        .gauge-item:hover { transform: translateY(-3px); box-shadow: var(--shadow); }
+        .gauge-item .gauge-value {
+            font-size: 2.2rem; font-weight: 800;
+            background: var(--gradient-1); -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent; background-clip: text;
+        }
+        .gauge-item .gauge-label { font-size: .82rem; color: var(--text-light); margin-top: 4px; }
+
+        /* ===== FOOTER ===== */
+        .footer { background: var(--gradient-bg); color: #94a3b8; text-align: center; padding: 30px 20px; margin-top: 40px; }
+        .footer p { font-size: .9rem; }
+
+        /* ===== PARTICLES ===== */
+        .particles { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; overflow: hidden; }
+        .particle {
+            position: absolute; width: 6px; height: 6px;
+            background: rgba(26,115,232,.07); border-radius: 50%;
+            animation: floatParticle linear infinite;
+        }
+
+        /* ===== NAV ===== */
+        .sticky-nav {
+            position: sticky; top: 0; z-index: 50;
+            background: rgba(255,255,255,.95); backdrop-filter: blur(20px);
+            border-bottom: 1px solid #e2e8f0; padding: 12px 0;
+        }
+        .nav-inner { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; max-width: 900px; margin: 0 auto; padding: 0 20px; }
+        .nav-link {
+            padding: 6px 18px; border-radius: 50px; font-size: .85rem;
+            font-weight: 600; color: var(--text-light); text-decoration: none;
+            transition: all .3s; font-family: 'Tajawal', sans-serif;
+        }
+        .nav-link:hover { background: #e8f0fe; color: var(--primary); }
+
+        /* ===== SCROLL TOP ===== */
+        .scroll-top {
+            position: fixed; bottom: 30px; left: 30px;
+            width: 48px; height: 48px; border-radius: 50%;
+            background: var(--primary); color: white; border: none;
+            cursor: pointer; font-size: 1.3rem;
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 4px 15px rgba(26,115,232,.4);
+            opacity: 0; transform: translateY(20px); transition: all .3s; z-index: 100;
+        }
+        .scroll-top.visible { opacity: 1; transform: translateY(0); }
+        .scroll-top:hover { transform: translateY(-3px); box-shadow: 0 6px 25px rgba(26,115,232,.5); }
+
+        /* ===== NOTE BOX ===== */
+        .note-box {
+            background: linear-gradient(135deg, #e8f0fe 0%, #f0f7ff 100%);
+            border: 1px solid rgba(26,115,232,.2);
+            border-radius: var(--radius);
+            padding: 20px 24px;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+        .note-box .note-icon {
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+        .note-box .note-text {
+            font-size: .92rem;
+            color: var(--primary-dark);
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+
+<div class="particles" id="particles"></div>
+
+<!-- Hero -->
+<section class="hero">
+    <div class="hero-content">
+        <h1>📊 تقرير تحليل النسبة الموزونة للطلاب المنتظمين</h1>
+        <p>تحليل شامل لبيانات القبول في الكلية خلال آخر ثلاثة أعوام جامعية</p>
+        <div class="hero-badges">
+            <span class="hero-badge">🏫 العام الجامعي 2023–2024</span>
+            <span class="hero-badge">🏫 العام الجامعي 2024–2025</span>
+            <span class="hero-badge">🏫 العام الجامعي 2025–2026</span>
+        </div>
+    </div>
+</section>
+
+<!-- Summary -->
+<section class="summary-section">
+    <div class="container">
+        <div class="summary-grid">
+            <div class="summary-card animate-on-scroll">
+                <div class="icon">👥</div>
+                <div class="value" data-count="2224">0</div>
+                <div class="label">إجمالي عدد الطلاب</div>
+            </div>
+            <div class="summary-card animate-on-scroll">
+                <div class="icon">📈</div>
+                <div class="value" data-count="78.49" data-decimal="true">0</div>
+                <div class="label">متوسط النسبة الموزونة</div>
+            </div>
+            <div class="summary-card animate-on-scroll">
+                <div class="icon">🏆</div>
+                <div class="value" data-count="95.25" data-decimal="true">0</div>
+                <div class="label">أعلى نسبة موزونة</div>
+            </div>
+            <div class="summary-card animate-on-scroll">
+                <div class="icon">📉</div>
+                <div class="value" data-count="60.00" data-decimal="true">0</div>
+                <div class="label">أقل نسبة موزونة</div>
+            </div>
+            <div class="summary-card animate-on-scroll">
+                <div class="icon">🎯</div>
+                <div class="value" data-count="78.50" data-decimal="true">0</div>
+                <div class="label">الوسيط (القيمة الوسطى)</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Nav -->
+<nav class="sticky-nav">
+    <div class="nav-inner">
+        <a href="#overview" class="nav-link">📋 نظرة عامة</a>
+        <a href="#distribution" class="nav-link">📊 التوزيع</a>
+        <a href="#comparison" class="nav-link">⚖️ المقارنة</a>
+        <a href="#percentiles" class="nav-link">📐 النسب المئوية</a>
+        <a href="#categories" class="nav-link">📈 الفئات</a>
+        <a href="#insights" class="nav-link">💡 النتائج</a>
+    </div>
+</nav>
+
+<!-- Overview -->
+<section class="section" id="overview">
+    <div class="container">
+        <div class="section-header animate-on-scroll">
+            <h2>📋 نظرة عامة على الإحصائيات الأساسية</h2>
+            <p>مقارنة المؤشرات الرئيسية عبر الأعوام الثلاثة</p>
+            <div class="line"></div>
+        </div>
+
+        <div class="chart-card animate-on-scroll">
+            <h3>جدول المقارنة التفصيلي</h3>
+            <p class="subtitle">ملخص إحصائي شامل لكل عام جامعي</p>
+            <div class="cumulative-wrapper">
+                <table class="stats-table">
+                    <thead><tr><th>المؤشر</th><th>2023–2024</th><th>2024–2025</th><th>2025–2026</th></tr></thead>
+                    <tbody>
+                        <tr><td><strong>عدد الطلاب</strong></td><td class="hl-blue">402</td><td class="hl-blue">967</td><td class="hl-blue">855</td></tr>
+                        <tr><td><strong>المتوسط الحسابي</strong></td><td>78.39</td><td>78.51</td><td>78.52</td></tr>
+                        <tr><td><strong>الوسيط</strong></td><td>78.75</td><td>78.25</td><td>78.50</td></tr>
+                        <tr><td><strong>أعلى نسبة</strong></td><td class="hl-green">93.00</td><td class="hl-green">95.25</td><td class="hl-green">94.75</td></tr>
+                        <tr><td><strong>أقل نسبة</strong></td><td>60.75</td><td>60.00</td><td>60.00</td></tr>
+                        <tr><td><strong>المدى (الأعلى – الأقل)</strong></td><td>32.25</td><td>35.25</td><td>34.75</td></tr>
+                        <tr><td><strong>الانحراف المعياري</strong></td><td>6.34</td><td>6.15</td><td>5.72</td></tr>
+                        <tr><td><strong>المدى الربيعي (IQR)</strong></td><td>8.50</td><td>8.00</td><td>7.00</td></tr>
+                        <tr><td><strong>الشريحة الأكثر تكراراً</strong></td><td class="hl-orange">80–85</td><td class="hl-orange">75–80</td><td class="hl-orange">75–80</td></tr>
+                        <tr><td><strong>نسبة 80% فأعلى</strong></td><td class="hl-green">44.3%</td><td class="hl-green">41.3%</td><td class="hl-green">40.0%</td></tr>
+                        <tr><td><strong>نسبة 70% فأعلى</strong></td><td>90.3%</td><td>91.7%</td><td>93.2%</td></tr>
+                        <tr><td><strong>نسبة 60–69.99%</strong></td><td>9.7%</td><td>8.3%</td><td>6.8%</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Distribution -->
+<section class="section" id="distribution" style="background:#f8fafc;">
+    <div class="container">
+        <div class="section-header animate-on-scroll">
+            <h2>📊 توزيع النسب الموزونة</h2>
+            <p>كيف تتوزع نسب الطلاب عبر الشرائح المختلفة</p>
+            <div class="line"></div>
+        </div>
+        <div class="year-tabs animate-on-scroll">
+            <button class="year-tab active" onclick="switchYear(0)">2023–2024</button>
+            <button class="year-tab" onclick="switchYear(1)">2024–2025</button>
+            <button class="year-tab" onclick="switchYear(2)">2025–2026</button>
+        </div>
+        <div class="chart-row">
+            <div class="chart-card animate-on-scroll">
+                <h3>📈 الرسم البياني الشريطي</h3>
+                <p class="subtitle">توزيع الطلاب حسب شرائح النسبة الموزونة</p>
+                <div class="chart-container"><canvas id="barChart"></canvas></div>
+            </div>
+            <div class="chart-card animate-on-scroll">
+                <h3>🍩 الرسم البياني الدائري</h3>
+                <p class="subtitle">النسب المئوية لتوزيع الشرائح</p>
+                <div class="chart-container"><canvas id="pieChart"></canvas></div>
+            </div>
+        </div>
+        <div class="chart-card animate-on-scroll">
+            <h3>📉 منحنى التوزيع التراكمي</h3>
+            <p class="subtitle">النسبة التراكمية للطلاب عند كل مستوى</p>
+            <div class="chart-container"><canvas id="cumulChart"></canvas></div>
+        </div>
+    </div>
+</section>
+
+<!-- Comparison -->
+<section class="section" id="comparison">
+    <div class="container">
+        <div class="section-header animate-on-scroll">
+            <h2>⚖️ مقارنة بين الأعوام الثلاثة</h2>
+            <p>تحليل التغيرات في مؤشرات القبول عبر السنوات</p>
+            <div class="line"></div>
+        </div>
+        <div class="chart-row">
+            <div class="chart-card animate-on-scroll">
+                <h3>📊 مقارنة المتوسطات</h3>
+                <p class="subtitle">متوسط النسبة الموزونة لكل عام</p>
+                <div class="chart-container" style="max-height:350px;"><canvas id="avgChart"></canvas></div>
+            </div>
+            <div class="chart-card animate-on-scroll">
+                <h3>📊 مقارنة عدد الطلاب</h3>
+                <p class="subtitle">عدد الطلاب لكل عام</p>
+                <div class="chart-container" style="max-height:350px;"><canvas id="countChart"></canvas></div>
+            </div>
+        </div>
+        <div class="chart-card animate-on-scroll">
+            <h3>📊 مقارنة الشرائح عبر الأعوام</h3>
+            <p class="subtitle">توزيع الطلاب حسب الشرائح لكل عام جامعي</p>
+            <div class="chart-container"><canvas id="groupedChart"></canvas></div>
+        </div>
+        <div class="chart-card animate-on-scroll">
+            <h3>📊 مقارنة النسب المئوية حسب الفئات</h3>
+            <p class="subtitle">نسبة الطلاب في كل فئة</p>
+            <div class="chart-container" style="max-height:350px;"><canvas id="catChart"></canvas></div>
+        </div>
+    </div>
+</section>
+
+<!-- Percentiles -->
+<section class="section" id="percentiles" style="background:#f8fafc;">
+    <div class="container">
+        <div class="section-header animate-on-scroll">
+            <h2>📐 النسب المئوية (Percentiles)</h2>
+            <p>مستويات الأداء المختلفة للطلاب المقبولين</p>
+            <div class="line"></div>
+        </div>
+        <div class="chart-card animate-on-scroll">
+            <h3>📍 المؤشرات المئوية الرئيسية (2025–2026)</h3>
+            <p class="subtitle">النسب الموزونة عند كل مستوى مئوي</p>
+            <div class="gauge-grid">
+                <div class="gauge-item"><div class="gauge-value">71.3</div><div class="gauge-label">الشريحة 10% (أدنى عُشر)</div></div>
+                <div class="gauge-item"><div class="gauge-value">75.0</div><div class="gauge-label">الربيع الأول (Q1)</div></div>
+                <div class="gauge-item"><div class="gauge-value">78.5</div><div class="gauge-label">الوسيط (Q2)</div></div>
+                <div class="gauge-item"><div class="gauge-value">82.0</div><div class="gauge-label">الربيع الثالث (Q3)</div></div>
+                <div class="gauge-item"><div class="gauge-value">85.8</div><div class="gauge-label">الشريحة 90%</div></div>
+                <div class="gauge-item"><div class="gauge-value">88.3</div><div class="gauge-label">الشريحة 95%</div></div>
+            </div>
+        </div>
+        <div class="chart-card animate-on-scroll">
+            <h3>📊 المؤشرات المئوية عبر الأعوام</h3>
+            <p class="subtitle">مقارنة النسب المئوية بين الأعوام الثلاثة</p>
+            <div class="chart-container" style="max-height:380px;"><canvas id="radarChart"></canvas></div>
+        </div>
+    </div>
+</section>
+
+<!-- Categories -->
+<section class="section" id="categories">
+    <div class="container">
+        <div class="section-header animate-on-scroll">
+            <h2>📈 توزيع الطلاب حسب الفئات</h2>
+            <p>تصنيف الطلاب حسب مستوى النسبة الموزونة</p>
+            <div class="line"></div>
+        </div>
+
+        <div class="chart-card animate-on-scroll">
+            <h3>📊 نسبة الطلاب في كل فئة (2025–2026)</h3>
+            <p class="subtitle">مستوى الأداء العام — 855 طالب</p>
+            <div class="progress-item">
+                <div class="progress-label"><span>🌟 ممتاز (80 فأعلى)</span><span>342 طالب (40.0%)</span></div>
+                <div class="progress-bar"><div class="progress-fill green" data-width="40"></div></div>
+            </div>
+            <div class="progress-item">
+                <div class="progress-label"><span>✅ جيد جداً (70 – 79.99)</span><span>455 طالب (53.2%)</span></div>
+                <div class="progress-bar"><div class="progress-fill blue" data-width="53.2"></div></div>
+            </div>
+            <div class="progress-item">
+                <div class="progress-label"><span>📌 جيد (60 – 69.99)</span><span>58 طالب (6.8%)</span></div>
+                <div class="progress-bar"><div class="progress-fill orange" data-width="6.8"></div></div>
+            </div>
+        </div>
+
+        <div class="chart-row">
+            <div class="chart-card animate-on-scroll">
+                <h3>📊 توزيع الفئات - 2024–2025</h3>
+                <p class="subtitle">967 طالب</p>
+                <div class="progress-item">
+                    <div class="progress-label"><span>🌟 ممتاز (80+)</span><span>399 (41.3%)</span></div>
+                    <div class="progress-bar"><div class="progress-fill green" data-width="41.3"></div></div>
+                </div>
+                <div class="progress-item">
+                    <div class="progress-label"><span>✅ جيد جداً (70-79.99)</span><span>488 (50.4%)</span></div>
+                    <div class="progress-bar"><div class="progress-fill blue" data-width="50.4"></div></div>
+                </div>
+                <div class="progress-item">
+                    <div class="progress-label"><span>📌 جيد (60-69.99)</span><span>80 (8.3%)</span></div>
+                    <div class="progress-bar"><div class="progress-fill orange" data-width="8.3"></div></div>
+                </div>
+            </div>
+            <div class="chart-card animate-on-scroll">
+                <h3>📊 توزيع الفئات - 2023–2024</h3>
+                <p class="subtitle">402 طالب</p>
+                <div class="progress-item">
+                    <div class="progress-label"><span>🌟 ممتاز (80+)</span><span>178 (44.3%)</span></div>
+                    <div class="progress-bar"><div class="progress-fill green" data-width="44.3"></div></div>
+                </div>
+                <div class="progress-item">
+                    <div class="progress-label"><span>✅ جيد جداً (70-79.99)</span><span>185 (46.0%)</span></div>
+                    <div class="progress-bar"><div class="progress-fill blue" data-width="46"></div></div>
+                </div>
+                <div class="progress-item">
+                    <div class="progress-label"><span>📌 جيد (60-69.99)</span><span>39 (9.7%)</span></div>
+                    <div class="progress-bar"><div class="progress-fill orange" data-width="9.7"></div></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Insights -->
+<section class="section" id="insights" style="background:#f8fafc;">
+    <div class="container">
+        <div class="section-header animate-on-scroll">
+            <h2>💡 أهم النتائج والاستنتاجات</h2>
+            <p>رؤى تحليلية مستخلصة من البيانات</p>
+            <div class="line"></div>
+        </div>
+
+        <div class="insight-box blue animate-on-scroll">
+            <div class="insight-icon">📊</div>
+            <div class="insight-text">
+                <h4>ثبات واضح في متوسط القبول</h4>
+                <p>حافظ متوسط النسبة الموزونة على مستوى ثابت يتراوح بين 78.39 و78.52 عبر الأعوام الثلاثة. هذا الثبات القوي يشير إلى استقرار معايير القبول في الكلية وضمان جودة الملتحقين بالبرنامج الأكاديمي، حيث أن الطالب المقبول يحصل في المتوسط على ما يقارب 78.5% كنسبة موزونة.</p>
+            </div>
+        </div>
+
+        <div class="insight-box green animate-on-scroll">
+            <div class="insight-icon">🏆</div>
+            <div class="insight-text">
+                <h4>أعلى نسبة موزونة بلغت 95.25%</h4>
+                <p>تم تحقيق أعلى نسبة في العام 2024-2025 بقيمة 95.25%، تليها 94.75% في 2025-2026، ثم 93% في 2023-2024. هذه النسب تعكس وجود طلاب متميزين يحققون أداءً ممتازاً في جميع المكونات (الثانوية العامة والقدرات والتحصيلي)، مما يرفع المتوسط العام ويعزز التنافسية الأكاديمية.</p>
+            </div>
+        </div>
+
+        <div class="insight-box orange animate-on-scroll">
+            <div class="insight-icon">🎯</div>
+            <div class="insight-text">
+                <h4>أكثر من 91% من الطلاب فوق 70%</h4>
+                <p>في جميع الأعوام الثلاثة، تجاوزت نسبة الطلاب فوق 70% حاجز الـ 90%، وارتفعت من 90.3% إلى 93.2% في آخر عام. هذا يعني أن الغالبية العظمى من الطلاب المقبولين يقعون في فئة جيد جداً أو ممتاز، مما يعكس جودة عالية في معايير القبول.</p>
+            </div>
+        </div>
+
+        <div class="insight-box blue animate-on-scroll">
+            <div class="insight-icon">📏</div>
+            <div class="insight-text">
+                <h4>نطاق التركيز الأساسي: 70 – 85%</h4>
+                <p>تركز الغالبية العظمى من النسب في النطاق بين 70% و85%. الشريحة الأكثر تكراراً هي 75-80% في عامي 2024-2025 و2025-2026 (313 و310 طالب)، بينما كانت 80-85% الأكثر تكراراً في 2023-2024 (117 طالب). الطالب النموذجي المقبول يحصل على نسبة بين جيد جداً وممتاز.</p>
+            </div>
+        </div>
+
+        <div class="insight-box green animate-on-scroll">
+            <div class="insight-icon">📉</div>
+            <div class="insight-text">
+                <h4>تقارب ملحوظ في مستويات الطلاب وانخفاض التشتت</h4>
+                <p>انخفض الانحراف المعياري من 6.34 إلى 5.72، كما انخفض المدى الربيعي من 8.50 إلى 7.00. هذا يعني أن الفجوة بين الطالب الأقوى والأضعف تضيق تدريجياً، وأن مستويات الطلاب المقبولين تصبح أكثر تجانساً وتقارباً عاماً بعد عام.</p>
+            </div>
+        </div>
+
+        <div class="insight-box orange animate-on-scroll">
+            <div class="insight-icon">📊</div>
+            <div class="insight-text">
+                <h4>حوالي 40% من الطلاب بمستوى ممتاز (80%+)</h4>
+                <p>يحصل ما يقارب 40% من الطلاب المقبولين على 80% فأعلى في جميع الأعوام (44.3% → 41.3% → 40.0%). هذا يعكس جودة عالية في استقطاب المتفوقين. فئة "جيد جداً" (70-79.99%) تمثل النسبة الأكبر بحوالي 46-53% من الطلاب، بينما تمثل فئة "جيد" (60-69.99%) نسبة صغيرة تناقصت من 9.7% إلى 6.8%.</p>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<footer class="footer">
+    <p>📄 تقرير تحليل النسبة الموزونة — تم إنشاؤه تلقائياً | البيانات مستخلصة من ملف الطلاب المنتظمين</p>
+</footer>
+
+<button class="scroll-top" id="scrollTopBtn" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<script>
+(function() {
+    'use strict';
+
+    // ============ DATA ============
+    var yearsData = [
+        {
+            label: "2023–2024",
+            total: 402,
+            avg: 78.39,
+            max: 93.00,
+            min: 60.75,
+            median: 78.75,
+            std: 6.34,
+            p10: 70.0,
+            p25: 74.25,
+            p75: 82.75,
+            p90: 85.75,
+            p95: 88.75,
+            pct80: 44.3,
+            pct70: 90.3,
+            pctBelow70: 9.7,
+            ranges: { "60-65":7, "65-70":32, "70-75":80, "75-80":105, "80-85":117, "85-90":50, "90-95":11 }
+        },
+        {
+            label: "2024–2025",
+            total: 967,
+            avg: 78.51,
+            max: 95.25,
+            min: 60.00,
+            median: 78.25,
+            std: 6.15,
+            p10: 70.75,
+            p25: 74.75,
+            p75: 82.75,
+            p90: 86.5,
+            p95: 88.5,
+            pct80: 41.3,
+            pct70: 91.7,
+            pctBelow70: 8.3,
+            ranges: { "60-65":18, "65-70":62, "70-75":175, "75-80":313, "80-85":253, "85-90":114, "90-95":31, "95-100":1 }
+        },
+        {
+            label: "2025–2026",
+            total: 855,
+            avg: 78.52,
+            max: 94.75,
+            min: 60.00,
+            median: 78.50,
+            std: 5.72,
+            p10: 71.25,
+            p25: 75.0,
+            p75: 82.0,
+            p90: 85.75,
+            p95: 88.25,
+            pct80: 40.0,
+            pct70: 93.2,
+            pctBelow70: 6.8,
+            ranges: { "60-65":11, "65-70":47, "70-75":145, "75-80":310, "80-85":232, "85-90":88, "90-95":22 }
+        }
+    ];
+
+    var allRangeLabels = ["60-65","65-70","70-75","75-80","80-85","85-90","90-95","95-100"];
+    var barColors = [
+        "rgba(251,188,4,0.8)", "rgba(251,146,60,0.8)",
+        "rgba(26,115,232,0.8)", "rgba(26,115,232,0.95)", "rgba(52,168,83,0.85)",
+        "rgba(52,168,83,0.55)", "rgba(124,58,237,0.8)", "rgba(124,58,237,0.55)"
+    ];
+    var yearColors = ["rgba(26,115,232,0.8)", "rgba(52,168,83,0.8)", "rgba(251,188,4,0.8)"];
+    var yearBorders = ["rgba(26,115,232,1)", "rgba(52,168,83,1)", "rgba(251,188,4,1)"];
+    var yearBg = ["rgba(26,115,232,0.12)", "rgba(52,168,83,0.12)", "rgba(251,188,4,0.12)"];
+
+    Chart.defaults.font.family = "Tajawal";
+    Chart.defaults.font.size = 13;
+    Chart.defaults.plugins.legend.labels.padding = 14;
+    Chart.defaults.plugins.tooltip.backgroundColor = "rgba(15,23,42,0.92)";
+    Chart.defaults.plugins.tooltip.padding = 12;
+    Chart.defaults.plugins.tooltip.cornerRadius = 10;
+
+    function getSortedKeys(rangesObj) {
+        return Object.keys(rangesObj).sort(function(a, b) { return parseInt(a) - parseInt(b); });
+    }
+    function getSortedValues(rangesObj) {
+        var keys = getSortedKeys(rangesObj);
+        var vals = [];
+        for (var i = 0; i < keys.length; i++) vals.push(rangesObj[keys[i]]);
+        return vals;
+    }
+
+    // ============ DISTRIBUTION CHARTS ============
+    var myBarChart = null, myPieChart = null, myCumulChart = null;
+
+    function buildBarChart(idx) {
+        var ctx = document.getElementById("barChart");
+        if (myBarChart) { myBarChart.destroy(); myBarChart = null; }
+        var d = yearsData[idx];
+        var labels = getSortedKeys(d.ranges);
+        var values = getSortedValues(d.ranges);
+        var colors = [];
+        for (var i = 0; i < labels.length; i++) colors.push(barColors[i % barColors.length]);
+        myBarChart = new Chart(ctx, {
+            type: "bar",
+            data: { labels: labels, datasets: [{ label: "عدد الطلاب", data: values, backgroundColor: colors, borderRadius: 8, borderSkipped: false }] },
+            options: {
+                responsive: true, maintainAspectRatio: true,
+                animation: { duration: 1200, easing: "easeOutQuart" },
+                plugins: { legend: { display: false }, tooltip: { callbacks: { label: function(c) { return c.raw + " طالب (" + (c.raw / d.total * 100).toFixed(1) + "%)"; } } } },
+                scales: { y: { beginAtZero: true, grid: { color: "rgba(0,0,0,0.05)" } }, x: { grid: { display: false } } }
+            }
+        });
+    }
+
+    function buildPieChart(idx) {
+        var ctx = document.getElementById("pieChart");
+        if (myPieChart) { myPieChart.destroy(); myPieChart = null; }
+        var d = yearsData[idx];
+        var labels = getSortedKeys(d.ranges);
+        var values = getSortedValues(d.ranges);
+        var colors = [];
+        for (var i = 0; i < labels.length; i++) colors.push(barColors[i % barColors.length]);
+        myPieChart = new Chart(ctx, {
+            type: "doughnut",
+            data: { labels: labels, datasets: [{ data: values, backgroundColor: colors, borderWidth: 2, borderColor: "#fff", hoverOffset: 15 }] },
+            options: {
+                responsive: true, maintainAspectRatio: true,
+                animation: { animateRotate: true, duration: 1500 },
+                plugins: {
+                    legend: { position: "bottom", labels: { font: { size: 11 }, usePointStyle: true, pointStyle: "circle", padding: 10 } },
+                    tooltip: { callbacks: { label: function(c) { return c.label + ": " + c.raw + " طالب (" + (c.raw / d.total * 100).toFixed(1) + "%)"; } } }
+                },
+                cutout: "45%"
+            }
+        });
+    }
+
+    function buildCumulChart(idx) {
+        var ctx = document.getElementById("cumulChart");
+        if (myCumulChart) { myCumulChart.destroy(); myCumulChart = null; }
+        var d = yearsData[idx];
+        var keys = getSortedKeys(d.ranges);
+        var cum = [];
+        var sum = 0;
+        for (var i = 0; i < keys.length; i++) { sum += d.ranges[keys[i]]; cum.push((sum / d.total * 100).toFixed(1)); }
+        myCumulChart = new Chart(ctx, {
+            type: "line",
+            data: {
+                labels: keys,
+                datasets: [{ label: "النسبة التراكمية %", data: cum, borderColor: yearColors[0], backgroundColor: yearBg[0], fill: true, tension: 0.4, pointRadius: 6, pointHoverRadius: 9, pointBackgroundColor: "#fff", pointBorderColor: yearBorders[0], pointBorderWidth: 3, borderWidth: 3 }]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: true, animation: { duration: 1500 },
+                plugins: { legend: { display: false }, tooltip: { callbacks: { label: function(c) { return c.raw + "% تراكمي"; } } } },
+                scales: { y: { beginAtZero: true, max: 100, grid: { color: "rgba(0,0,0,0.05)" }, ticks: { callback: function(v) { return v + "%"; } } }, x: { grid: { color: "rgba(0,0,0,0.03)" } } }
+            }
+        });
+    }
+
+    window.switchYear = function(idx) {
+        var tabs = document.querySelectorAll(".year-tab");
+        for (var i = 0; i < tabs.length; i++) tabs[i].classList.toggle("active", i === idx);
+        buildBarChart(idx); buildPieChart(idx); buildCumulChart(idx);
+    };
+
+    // ============ COMPARISON CHARTS ============
+    function buildAvgChart() {
+        new Chart(document.getElementById("avgChart"), {
+            type: "bar",
+            data: {
+                labels: yearsData.map(function(d) { return d.label; }),
+                datasets: [{ label: "متوسط النسبة الموزونة", data: yearsData.map(function(d) { return d.avg; }), backgroundColor: yearColors, borderColor: yearBorders, borderWidth: 2, borderRadius: 12, borderSkipped: false, barPercentage: 0.5 }]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: true, animation: { duration: 1500 },
+                plugins: { legend: { display: false }, tooltip: { callbacks: { label: function(c) { return "المتوسط: " + c.raw + "%"; } } } },
+                scales: { y: { min: 76, max: 82, grid: { color: "rgba(0,0,0,0.05)" }, ticks: { callback: function(v) { return v + "%"; } } }, x: { grid: { display: false } } }
+            }
+        });
+    }
+
+    function buildCountChart() {
+        new Chart(document.getElementById("countChart"), {
+            type: "bar",
+            data: {
+                labels: yearsData.map(function(d) { return d.label; }),
+                datasets: [{ label: "عدد الطلاب", data: yearsData.map(function(d) { return d.total; }), backgroundColor: yearColors, borderColor: yearBorders, borderWidth: 2, borderRadius: 12, borderSkipped: false, barPercentage: 0.5 }]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: true, animation: { duration: 1500 },
+                plugins: { legend: { display: false }, tooltip: { callbacks: { label: function(c) { return c.raw + " طالب"; } } } },
+                scales: { y: { beginAtZero: true, grid: { color: "rgba(0,0,0,0.05)" } }, x: { grid: { display: false } } }
+            }
+        });
+    }
+
+    function buildGroupedChart() {
+        var datasets = [];
+        for (var i = 0; i < yearsData.length; i++) {
+            var vals = [];
+            for (var j = 0; j < allRangeLabels.length; j++) {
+                var key = allRangeLabels[j];
+                vals.push(yearsData[i].ranges[key] || 0);
+            }
+            datasets.push({ label: yearsData[i].label, data: vals, backgroundColor: yearColors[i], borderRadius: 4 });
+        }
+        new Chart(document.getElementById("groupedChart"), {
+            type: "bar",
+            data: { labels: allRangeLabels, datasets: datasets },
+            options: {
+                responsive: true, maintainAspectRatio: true, animation: { duration: 1500 },
+                plugins: { legend: { position: "top" }, tooltip: { mode: "index", intersect: false } },
+                scales: { y: { beginAtZero: true, grid: { color: "rgba(0,0,0,0.05)" } }, x: { grid: { display: false } } },
+                interaction: { mode: "index", intersect: false }
+            }
+        });
+    }
+
+    function buildCatChart() {
+        var datasets = [];
+        for (var i = 0; i < yearsData.length; i++) {
+            var d = yearsData[i];
+            datasets.push({
+                label: d.label,
+                data: [d.pct80, +(d.pct70 - d.pct80).toFixed(1), d.pctBelow70],
+                backgroundColor: yearColors[i],
+                borderRadius: 6, borderSkipped: false
+            });
+        }
+        new Chart(document.getElementById("catChart"), {
+            type: "bar",
+            data: {
+                labels: ["80%+ (ممتاز)", "70–79.99% (جيد جداً)", "60–69.99% (جيد)"],
+                datasets: datasets
+            },
+            options: {
+                responsive: true, maintainAspectRatio: true, animation: { duration: 1500 },
+                plugins: { legend: { position: "top" }, tooltip: { callbacks: { label: function(c) { return c.dataset.label + ": " + c.raw + "%"; } } } },
+                scales: { y: { beginAtZero: true, max: 60, grid: { color: "rgba(0,0,0,0.05)" }, ticks: { callback: function(v) { return v + "%"; } } }, x: { grid: { display: false } } }
+            }
+        });
+    }
+
+    // ============ PERCENTILE CHARTS ============
+    function buildRadarChart() {
+        var datasets = [];
+        for (var i = 0; i < yearsData.length; i++) {
+            var d = yearsData[i];
+            datasets.push({
+                label: d.label,
+                data: [d.min, d.p10, d.p25, d.median, d.p75, d.p90, d.p95, d.max],
+                borderColor: yearBorders[i], backgroundColor: yearBg[i], borderWidth: 2,
+                pointRadius: 4, pointBackgroundColor: "#fff", pointBorderColor: yearBorders[i], pointBorderWidth: 2
+            });
+        }
+        new Chart(document.getElementById("radarChart"), {
+            type: "radar",
+            data: {
+                labels: ["أقل نسبة", "P10", "Q1", "الوسيط", "Q3", "P90", "P95", "أعلى نسبة"],
+                datasets: datasets
+            },
+            options: {
+                responsive: true, maintainAspectRatio: true, animation: { duration: 1500 },
+                plugins: { legend: { position: "top" } },
+                scales: { r: { beginAtZero: false, min: 55, max: 100, grid: { color: "rgba(0,0,0,0.06)" }, pointLabels: { font: { size: 11, weight: "600" } }, ticks: { stepSize: 10, font: { size: 10 } } } }
+            }
+        });
+    }
+
+    // ============ PARTICLES ============
+    function createParticles() {
+        var container = document.getElementById("particles");
+        for (var i = 0; i < 15; i++) {
+            var p = document.createElement("div");
+            p.className = "particle";
+            p.style.left = (Math.random() * 100) + "%";
+            var size = (3 + Math.random() * 5) + "px";
+            p.style.width = size; p.style.height = size;
+            p.style.animationDuration = (12 + Math.random() * 20) + "s";
+            p.style.animationDelay = (Math.random() * 15) + "s";
+            container.appendChild(p);
+        }
+    }
+
+    // ============ SCROLL ANIMATIONS ============
+    function initScrollAnimations() {
+        var observer = new IntersectionObserver(function(entries) {
+            for (var i = 0; i < entries.length; i++) {
+                if (entries[i].isIntersecting) {
+                    entries[i].target.classList.add("visible");
+                    var bars = entries[i].target.querySelectorAll(".progress-fill");
+                    for (var j = 0; j < bars.length; j++) {
+                        var w = bars[j].getAttribute("data-width");
+                        if (w) bars[j].style.width = Math.max(parseFloat(w), 1.5) + "%";
+                    }
+                }
+            }
+        }, { threshold: 0.12 });
+        var elements = document.querySelectorAll(".animate-on-scroll");
+        for (var i = 0; i < elements.length; i++) observer.observe(elements[i]);
+    }
+
+    // ============ COUNT UP ============
+    function animateCounters() {
+        var cards = document.querySelectorAll(".summary-card .value");
+        for (var i = 0; i < cards.length; i++) {
+            (function(el, delay) {
+                setTimeout(function() {
+                    var target = parseFloat(el.getAttribute("data-count"));
+                    var isDecimal = el.getAttribute("data-decimal") === "true";
+                    var duration = 2000;
+                    var startTime = performance.now();
+                    function tick(now) {
+                        var elapsed = now - startTime;
+                        var progress = Math.min(elapsed / duration, 1);
+                        var eased = 1 - Math.pow(1 - progress, 3);
+                        var current = target * eased;
+                        el.textContent = isDecimal ? current.toFixed(2) : Math.round(current).toLocaleString("ar-SA");
+                        if (progress < 1) requestAnimationFrame(tick);
+                    }
+                    requestAnimationFrame(tick);
+                }, delay);
+            })(cards[i], 600 + i * 200);
+        }
+    }
+
+    // ============ SCROLL TOP ============
+    function initScrollTop() {
+        var btn = document.getElementById("scrollTopBtn");
+        window.addEventListener("scroll", function() { btn.classList.toggle("visible", window.scrollY > 400); });
+    }
+
+    // ============ SMOOTH NAV ============
+    var navLinks = document.querySelectorAll(".nav-link");
+    for (var i = 0; i < navLinks.length; i++) {
+        navLinks[i].addEventListener("click", function(e) {
+            e.preventDefault();
+            var href = this.getAttribute("href");
+            var target = document.querySelector(href);
+            if (target) window.scrollTo({ top: target.getBoundingClientRect().top + window.scrollY - 60, behavior: "smooth" });
+        });
+    }
+
+    // ============ INIT ALL ============
+    function init() {
+        try {
+            createParticles();
+            initScrollAnimations();
+            animateCounters();
+            initScrollTop();
+            buildBarChart(0);
+            buildPieChart(0);
+            buildCumulChart(0);
+            buildAvgChart();
+            buildCountChart();
+            buildGroupedChart();
+            buildCatChart();
+            buildRadarChart();
+        } catch(err) {
+            console.error("Chart init error:", err);
+        }
+    }
+
+    if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", init);
+    } else {
+        init();
+    }
+})();
+</script>
+
+</body>
+</html>
