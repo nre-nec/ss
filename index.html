@@ -152,10 +152,108 @@
         .chart-container { position: relative; width: 100%; max-height: 400px; }
         .chart-row { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
 
+        /* ===== RESPONSIVE — TABLET ===== */
         @media (max-width: 768px) {
-            .chart-row { grid-template-columns: 1fr; }
-            .hero h1 { font-size: 1.6rem; }
-            .summary-grid { grid-template-columns: repeat(2, 1fr); }
+            .chart-row { grid-template-columns: 1fr; gap: 16px; }
+            .hero { padding: 40px 16px 35px; }
+            .hero h1 { font-size: 1.5rem; }
+            .hero p { font-size: 1rem; }
+            .hero-badge { font-size: .78rem; padding: 6px 14px; }
+            .summary-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+            .summary-section { margin-top: -25px; padding-bottom: 20px; }
+            .summary-card { padding: 20px 14px; }
+            .summary-card .value { font-size: 1.6rem; }
+            .summary-card .icon { width: 44px; height: 44px; font-size: 1.2rem; }
+            .summary-card .label { font-size: .78rem; }
+            .section { padding: 30px 0; }
+            .section-header { margin-bottom: 24px; }
+            .section-header h2 { font-size: 1.35rem; }
+            .section-header p { font-size: .88rem; }
+            .chart-card { padding: 20px 16px; margin-bottom: 20px; border-radius: 12px; }
+            .chart-card h3 { font-size: 1.05rem; }
+            .chart-card .subtitle { font-size: .8rem; margin-bottom: 16px; }
+            .chart-container { max-height: 320px; }
+            .sticky-nav { padding: 8px 0; }
+            .nav-inner { gap: 4px; padding: 0 8px; overflow-x: auto; -webkit-overflow-scrolling: touch; flex-wrap: nowrap; justify-content: flex-start; }
+            .nav-inner::-webkit-scrollbar { display: none; }
+            .nav-link { padding: 5px 12px; font-size: .72rem; white-space: nowrap; flex-shrink: 0; }
+            .gauge-grid { grid-template-columns: repeat(3, 1fr); gap: 10px; }
+            .gauge-item { padding: 14px 8px; }
+            .gauge-item .gauge-value { font-size: 1.6rem; }
+            .gauge-item .gauge-label { font-size: .7rem; }
+            .insight-box { padding: 18px 14px; gap: 12px; }
+            .insight-icon { width: 38px; height: 38px; font-size: 1.1rem; }
+            .insight-text h4 { font-size: .95rem; }
+            .insight-text p { font-size: .85rem; line-height: 1.7; }
+            .progress-label { font-size: .82rem; flex-wrap: wrap; gap: 4px; }
+            .stats-table thead th { padding: 10px 8px; font-size: .8rem; }
+            .stats-table tbody td { padding: 10px 8px; font-size: .8rem; }
+            .year-tabs { gap: 8px; margin-bottom: 20px; }
+            .year-tab { padding: 8px 18px; font-size: .85rem; }
+            .scroll-top { bottom: 20px; left: 16px; width: 40px; height: 40px; font-size: 1.1rem; }
+            .footer { padding: 20px 16px; }
+            .footer p { font-size: .8rem; }
+        }
+
+        /* ===== RESPONSIVE — MOBILE ===== */
+        @media (max-width: 480px) {
+            .hero { padding: 30px 12px 25px; }
+            .hero h1 { font-size: 1.2rem; }
+            .hero p { font-size: .88rem; }
+            .hero-badges { gap: 8px; margin-top: 16px; }
+            .hero-badge { font-size: .7rem; padding: 5px 10px; }
+            .container { padding: 0 12px; }
+            .summary-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+            .summary-section { margin-top: -20px; padding-bottom: 16px; }
+            .summary-card { padding: 16px 10px; border-radius: 12px; }
+            .summary-card .value { font-size: 1.35rem; }
+            .summary-card .icon { width: 40px; height: 40px; font-size: 1.1rem; margin-bottom: 8px; }
+            .summary-card .label { font-size: .72rem; }
+            .section { padding: 24px 0; }
+            .section-header { margin-bottom: 18px; }
+            .section-header h2 { font-size: 1.15rem; }
+            .section-header p { font-size: .82rem; }
+            .chart-card { padding: 16px 12px; margin-bottom: 16px; border-radius: 12px; }
+            .chart-card h3 { font-size: .95rem; margin-bottom: 4px; }
+            .chart-card .subtitle { font-size: .76rem; margin-bottom: 12px; }
+            .chart-container { max-height: 280px; }
+            .chart-container[style*="350px"], .chart-container[style*="380px"] { max-height: 260px !important; }
+            .year-tabs { gap: 6px; }
+            .year-tab { padding: 7px 14px; font-size: .8rem; flex: 1; text-align: center; min-width: 0; }
+            .gauge-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+            .gauge-item { padding: 12px 6px; border-radius: 10px; }
+            .gauge-item .gauge-value { font-size: 1.4rem; }
+            .gauge-item .gauge-label { font-size: .65rem; line-height: 1.4; }
+            .insight-box { padding: 14px 12px; gap: 10px; border-radius: 12px; flex-direction: column; }
+            .insight-icon { width: 36px; height: 36px; font-size: 1rem; }
+            .insight-text h4 { font-size: .88rem; }
+            .insight-text p { font-size: .8rem; line-height: 1.6; }
+            .progress-label { font-size: .78rem; }
+            .progress-bar { height: 10px; }
+            .stats-table thead th { padding: 8px 6px; font-size: .72rem; }
+            .stats-table tbody td { padding: 8px 6px; font-size: .72rem; }
+            .note-box { padding: 14px 12px; gap: 10px; flex-direction: column; text-align: center; }
+            .note-box .note-icon { font-size: 1.2rem; }
+            .note-box .note-text { font-size: .82rem; }
+            .nav-inner { gap: 2px; padding: 0 6px; }
+            .nav-link { padding: 4px 10px; font-size: .68rem; }
+            .scroll-top { bottom: 16px; left: 12px; width: 36px; height: 36px; font-size: 1rem; }
+            .cumulative-wrapper { margin: 0 -12px; border-radius: 0; }
+            .cumulative-wrapper .stats-table { border-radius: 0; }
+            .particles { display: none; }
+        }
+
+        /* ===== RESPONSIVE — VERY SMALL ===== */
+        @media (max-width: 360px) {
+            .hero h1 { font-size: 1.05rem; }
+            .hero p { font-size: .82rem; }
+            .summary-card .value { font-size: 1.2rem; }
+            .summary-card .label { font-size: .68rem; }
+            .section-header h2 { font-size: 1.05rem; }
+            .chart-card h3 { font-size: .88rem; }
+            .year-tab { padding: 6px 10px; font-size: .75rem; }
+            .gauge-item .gauge-value { font-size: 1.2rem; }
+            .gauge-item .gauge-label { font-size: .6rem; }
         }
 
         /* ===== TABS ===== */
@@ -706,8 +804,10 @@
     var yearBg = ["rgba(26,115,232,0.12)", "rgba(52,168,83,0.12)", "rgba(251,188,4,0.12)"];
 
     Chart.defaults.font.family = "Tajawal";
-    Chart.defaults.font.size = 13;
-    Chart.defaults.plugins.legend.labels.padding = 14;
+    var isMobile = window.innerWidth < 600;
+    var isTablet = window.innerWidth < 768;
+    Chart.defaults.font.size = isMobile ? 10 : (isTablet ? 11 : 13);
+    Chart.defaults.plugins.legend.labels.padding = isMobile ? 8 : 14;
     Chart.defaults.plugins.tooltip.backgroundColor = "rgba(15,23,42,0.92)";
     Chart.defaults.plugins.tooltip.padding = 12;
     Chart.defaults.plugins.tooltip.cornerRadius = 10;
