@@ -162,7 +162,7 @@
         
         .prompt-area {
             display: none; background: rgba(0,0,0,0.3); border-radius: 8px; padding: 1rem; margin-top: 1rem;
-            border: 1px dashed var(--border); max-height: 200px; overflow-y: auto; font-size: 0.85rem; font-family: monospace; white-space: pre-wrap; color: #a1a1aa; direction: rtl; text-align: right;
+            border: 1px dashed var(--border); max-height: 250px; overflow-y: auto; font-size: 0.85rem; font-family: monospace; white-space: pre-wrap; color: #a1a1aa; direction: rtl; text-align: right;
         }
         .prompt-area.active { display: block; animation: fadeIn 0.3s ease; }
 
@@ -313,7 +313,7 @@
                             <span class="stat-label">أهداف تفصيلية</span>
                         </div>
                         <div class="stat-box">
-                            <span class="stat-number" data-target="7">0</span>
+                            <span class="stat-number" data-target="8">0</span>
                             <span class="stat-label">أدوات مخصصة (Gems)</span>
                         </div>
                         <div class="stat-box">
@@ -373,6 +373,7 @@
                     <button class="tab-btn" onclick="openScenarioTab(event, 'tab-meetings')">5. بناء المحاضر</button>
                     <button class="tab-btn" onclick="openScenarioTab(event, 'tab-excel')">6. تقارير النظام</button>
                     <button class="tab-btn" onclick="openScenarioTab(event, 'tab-procedures')">7. الأدلة الإجرائية</button>
+                    <button class="tab-btn" onclick="openScenarioTab(event, 'tab-poster')">8. مصمم البوسترات</button>
                 </div>
 
                 <!-- Tab 1: اللوائح -->
@@ -606,6 +607,39 @@
                     </div>
                 </div>
 
+                <!-- Tab 8: مصمم البوسترات -->
+                <div id="tab-poster" class="tab-content">
+                    <div class="grid-3">
+                        <div class="scenario-card">
+                            <div class="scenario-title">
+                                <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 9h-2V7h-2v5H6v2h2v5h2v-5h2v-2z"/></svg>
+                                تحويل إعلان نصي لبوستر
+                            </div>
+                            <div class="scenario-step"><strong>الهدف:</strong> إنتاج بوستر إعلاني لدورة تدريبية.</div>
+                            <div class="scenario-step"><strong>الإجراء:</strong> إدخال نص الدورة المبعثر وطلب تصميم بوستر HTML.</div>
+                            <div class="scenario-step"><strong>المخرج:</strong> <span style="color:var(--text-muted);">كود HTML احترافي يتضمن العناوين والمحتوى، بخلفية زجاجية (Glassmorphism)، وألوان الهوية (البنفسجي)، وشعار الكلية، وحقوق النشر.</span></div>
+                        </div>
+                        <div class="scenario-card">
+                            <div class="scenario-title">
+                                <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 9h-2V7h-2v5H6v2h2v5h2v-5h2v-2z"/></svg>
+                                تصميم واجهة نظام (UI)
+                            </div>
+                            <div class="scenario-step"><strong>الهدف:</strong> تصميم واجهة لوحة تحكم أكاديمية متوافقة مع الهوية.</div>
+                            <div class="scenario-step"><strong>الإجراء:</strong> استخدام "البرومت الوصفي باللغة العربية" لطلب الواجهة.</div>
+                            <div class="scenario-step"><strong>المخرج:</strong> <span style="color:var(--text-muted);">واجهة RTL بخط Cairo، أشكال سداسية (Hexagons) عائمة، وتأثيرات حركية (Animations)، مع استخدام كلمة "مهم" بدلاً من "هام".</span></div>
+                        </div>
+                        <div class="scenario-card">
+                            <div class="scenario-title">
+                                <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 9h-2V7h-2v5H6v2h2v5h2v-5h2v-2z"/></svg>
+                                تطبيق الهوية البصرية على كود
+                            </div>
+                            <div class="scenario-step"><strong>الهدف:</strong> توحيد المخرجات الإعلانية للكلية.</div>
+                            <div class="scenario-step"><strong>الإجراء:</strong> طلب تحويل مسودة إعلان (كود HTML) لتطابق هوية الكلية.</div>
+                            <div class="scenario-step"><strong>المخرج:</strong> <span style="color:var(--text-muted);">تعديل الألوان لتطابق لوحة البنفسجي (#6a3e6e)، وإضافة الشعار في التاب، وتذييلها بحقوق وحدة التطوير والجودة.</span></div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
     </section>
@@ -769,6 +803,44 @@
 - الفجوات في المصادر
 - مقترح غير معتمد (خطوات تفصيلية، تسلسل، مخرجات، نماذج مقترحة)
 - تنبيه ختامي بأن المقترحات للاسترشاد والمراجعة.`
+            },
+            {
+                title: "بوستر (مصمم الهوية البصرية)",
+                type: "GEMINI",
+                link: "https://gemini.google.com/gem/1mmh7xkFoxxdyRssycdo0AtULynJZnJQ5?usp=sharing",
+                desc: "مصمم ذكي متخصص لإنتاج بوسترات كلية الشمال للتمريض الأهلية وفق الهوية البصرية المعتمدة وتوليد أكواد HTML احترافية.",
+                prompt: `أنت مصمم جرافيك متخصص لكلية الشمال للتمريض الأهلية. مهمتك هي تحويل أي نص أو محادثة يتم تزويدك بها إلى بوستر إعلاني احترافي.
+
+القواعد الصارمة:
+هوية وتصميم كلية الشمال للتمريض الأهلية (North Nursing College UI Kit)
+
+الشعار (Logo):
+https://nre-nec.github.io/pictures/logo-p.png
+دائما أضف الشعار في تاب المستعرض وأيقونة تطبيق الويب
+
+حقوق النشر:
+(التطوير والجودة - كلية الشمال للتمريض الأهلية)
+
+1. لوحة الألوان (Color Palette)
+تتميز الهوية بمزيج من درجات البنفسجي التي تعكس الوقار الأكاديمي والجانب الطبي.
+- اللون الأساسي (Primary Purple): #6a3e6e
+- اللون الثانوي الداكن (Dark Purple): #4a2b4d
+- اللون الفاتح (Light Lavender): #8e6291
+- لون الخلفية (Accent Background): #f8f9fa
+- تأثير الزجاج (Glass Effect): rgba(255, 255, 255, 0.95) مع backdrop-filter: blur(10px).
+
+2. البرومت الوصفي (Prompts)
+[الخيار الأول: وصف باللغة العربية] "صمم واجهة مستخدم (UI) حديثة..."
+[الخيار الثاني: وصف باللغة الإنجليزية] "Modern academic dashboard UI..."
+
+3. العناصر البصرية الرئيسية (Visual Elements)
+- الخطوط (Typography): عائلة خط Cairo
+- الأشكال (Shapes): زوايا مستديرة Rounded-xl، وأشكال سداسية (Hexagons)
+- الأيقونات (Icons): طبية وأكاديمية (FontAwesome Solid)
+- الظلال (Shadows): ظلال ناعمة Shadow-lg
+- استخدم بعض الانيميشن والحركات المؤثرة
+- لا تستخدم كلمة (هام) الصواب (مهم)
+- عند إعطائك أي نص، قم باستخراج العنوان الرئيسي والمحتوى منه وصياغتهما في كود HTML احترافي.`
             }
         ];
 
