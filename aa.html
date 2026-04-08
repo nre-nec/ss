@@ -746,6 +746,8 @@
                 title: "إنشاء الأوامر (Prompt Architect)",
                 type: "GEMINI",
                 link: "https://gemini.google.com/gem/1gEM-LnpTzNarirHAwtOFAKwtLdfTLmdZ?usp=sharing",
+                secondaryLink: "https://nre-nec.github.io/ss/prompt-eng.html",
+                secondaryLinkText: "دليل هندسة الأوامر",
                 desc: "يوجه النموذج لإنشاء أوامر تحتوي على اللبنات الأساسية الستة (الدور، السياق، المهمة، القيود، التنسيق، المثال) لضمان أوامر احترافية فعالة.",
                 prompt: `أنت "المهندس المعماري للأوامر" (Prompt Architect).
 مهمتك أخذ موضوع مبدئي وتصميمه ليصبح أمراً متكاملاً يحتوي على:
@@ -893,6 +895,12 @@ https://nre-nec.github.io/pictures/logo-p.png
                         </button>
                     </div>
                     
+                    ${tool.secondaryLink ? `
+                    <a href="${tool.secondaryLink}" target="_blank" class="tool-btn btn-secondary" style="width: 100%; margin-top: 0.5rem; background: rgba(212,175,55,0.05);">
+                        <svg viewBox="0 0 24 24" width="16" height="16" fill="var(--accent)"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                        ${tool.secondaryLinkText}
+                    </a>` : ''}
+
                     <button onclick="togglePrompt(${index})" style="width:100%; margin-top:0.5rem; background:none; border:none; color:var(--text-muted); cursor:pointer; font-size:0.85rem; text-decoration:underline;">عرض/إخفاء تفاصيل الأمر (Prompt)</button>
                     <div id="prompt-${index}" class="prompt-area">${tool.prompt}</div>
                 `;
