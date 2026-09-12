@@ -1,0 +1,321 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#0f172a">
+  <title>قارئ باركود سريع</title>
+  <style>
+    *{box-sizing:border-box}
+    body{margin:0;background:#0f172a;color:#fff;font-family:system-ui,-apple-system,"Segoe UI",Tahoma,Arial,sans-serif}
+    .app{max-width:720px;margin:auto;padding:14px}
+    .top{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px}
+    h1{font-size:1.35rem;margin:0}
+    .sub{color:#94a3b8;font-size:.82rem;margin-top:4px}
+    .engine{font-size:.75rem;background:#1e293b;padding:7px 10px;border-radius:999px;color:#bbf7d0}
+    .cam{position:relative;background:#000;border-radius:20px;overflow:hidden;aspect-ratio:4/3;border:1px solid rgba(255,255,255,.1)}
+    video{width:100%;height:100%;object-fit:cover;display:block}
+    .zone{position:absolute;left:6%;right:6%;top:36%;height:28%;border:2px solid #fff;border-radius:16px;box-shadow:0 0 0 9999px rgba(0,0,0,.40);pointer-events:none}
+    .zone:before,.zone:after{content:"";position:absolute;height:28px;width:28px;border-color:#22c55e}
+    .zone:before{top:-2px;right:-2px;border-top:4px solid #22c55e;border-right:4px solid #22c55e;border-top-right-radius:14px}
+    .zone:after{bottom:-2px;left:-2px;border-bottom:4px solid #22c55e;border-left:4px solid #22c55e;border-bottom-left-radius:14px}
+    .line{position:absolute;left:4%;right:4%;height:2px;background:#22c55e;box-shadow:0 0 14px #22c55e;animation:s 1.8s linear infinite}
+    @keyframes s{0%{top:12%}50%{top:86%}100%{top:12%}}
+    .tip{position:absolute;bottom:10px;left:10px;right:10px;background:rgba(0,0,0,.68);padding:9px 10px;border-radius:12px;text-align:center;font-size:.82rem}
+    .controls{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:10px}
+    button{border:0;border-radius:13px;padding:12px;font:inherit;font-weight:700;cursor:pointer}
+    .green{background:#22c55e;color:#052e16}.gray{background:#334155;color:#fff}.amber{background:#f59e0b;color:#111827}
+    .panel{margin-top:10px;background:#111827;border:1px solid rgba(255,255,255,.1);border-radius:18px;padding:12px}
+    .status{font-size:.86rem;color:#cbd5e1;display:flex;justify-content:space-between;gap:10px}
+    .result{margin-top:10px;background:#0b1220;border-radius:14px;padding:12px;text-align:center}
+    .code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:clamp(1.35rem,6vw,2.1rem);font-weight:800;direction:ltr;word-break:break-all}
+    .fmt{font-size:.78rem;color:#86efac;margin-top:4px}
+    .row{display:flex;gap:8px;margin-top:10px}
+    .row button{flex:1}
+    .extras{display:none;margin-top:10px;gap:8px;align-items:center}
+    .extras.show{display:flex}
+    input[type=range]{flex:1}
+    .hist{margin-top:14px}
+    .hist-head{display:flex;justify-content:space-between;align-items:center}
+    .hist h2{font-size:1rem;margin:0}
+    .link{background:transparent;color:#cbd5e1;padding:6px}
+    .item{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:7px;padding:10px;background:#0b1220;border-radius:12px}
+    .item .v{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;direction:ltr;text-align:left;word-break:break-all}
+    .meta{font-size:.72rem;color:#94a3b8;margin-top:2px}
+    .mini{padding:7px 9px;background:#1e293b;color:#fff;border-radius:9px}
+    .empty{color:#64748b;text-align:center;padding:14px}
+    .note{color:#94a3b8;font-size:.76rem;line-height:1.6;margin-top:10px}
+    canvas{display:none}
+    @media(max-width:520px){.controls{grid-template-columns:1fr 1fr}.controls button:last-child{grid-column:1/-1}}
+  </style>
+</head>
+<body>
+<main class="app">
+  <div class="top">
+    <div>
+      <h1>قارئ الباركود السريع</h1>
+      <div class="sub">مُحسّن لباركود المنتجات EAN / UPC / Code 128</div>
+    </div>
+    <div class="engine" id="engine">تهيئة…</div>
+  </div>
+
+  <div class="cam">
+    <video id="video" playsinline muted autoplay></video>
+    <div class="zone"><div class="line"></div></div>
+    <div class="tip" id="tip">قرّب الباركود حتى يملأ معظم الإطار الأخضر</div>
+  </div>
+
+  <div class="controls">
+    <button class="green" id="start">تشغيل</button>
+    <button class="gray" id="stop">إيقاف</button>
+    <button class="amber" id="torch" hidden>إضاءة</button>
+  </div>
+
+  <div class="extras" id="zoomBox">
+    <span>تكبير</span>
+    <input id="zoom" type="range" min="1" max="1" step="0.1" value="1">
+    <span id="zoomVal">1×</span>
+  </div>
+
+  <section class="panel">
+    <div class="status">
+      <span id="status">جاهز</span>
+      <span id="fps"></span>
+    </div>
+
+    <div class="result">
+      <div class="code" id="code">—</div>
+      <div class="fmt" id="format"></div>
+    </div>
+
+    <div class="row">
+      <button class="gray" id="copy">نسخ</button>
+      <button class="gray" id="clear">مسح السجل</button>
+    </div>
+
+    <div class="hist">
+      <div class="hist-head"><h2>آخر القراءات</h2><span class="sub">محفوظة محليًا</span></div>
+      <div id="history"></div>
+    </div>
+
+    <div class="note">
+      يستخدم القارئ BarcodeDetector الأصلي في المتصفح إن كان متاحًا، ثم ينتقل تلقائيًا إلى ZXing كخطة بديلة.
+      أفضل نتيجة تحصل عليها عندما يكون الباركود واضحًا، أفقيًا، ومضاءً جيدًا.
+    </div>
+  </section>
+</main>
+
+<canvas id="crop"></canvas>
+
+<script src="https://unpkg.com/@zxing/library@0.21.3/umd/index.min.js"></script>
+<script>
+(() => {
+  const $=id=>document.getElementById(id);
+  const video=$("video"), crop=$("crop"), ctx=crop.getContext("2d",{willReadFrequently:true});
+  const status=$("status"), engine=$("engine"), code=$("code"), format=$("format"),
+        tip=$("tip"), fps=$("fps"), torchBtn=$("torch"), zoom=$("zoom"),
+        zoomBox=$("zoomBox"), zoomVal=$("zoomVal");
+  let stream=null, track=null, detector=null, zxing=null, running=false, busy=false;
+  let last="", lastAt=0, frames=0, fpsStart=performance.now(), torchOn=false;
+  let history=JSON.parse(localStorage.getItem("fast_barcode_history")||"[]");
+
+  const nativeWanted=["ean_13","ean_8","upc_a","upc_e","code_128","code_39","code_93","itf","codabar"];
+
+  function save(){localStorage.setItem("fast_barcode_history",JSON.stringify(history.slice(0,30)))}
+  function render(){
+    const box=$("history");
+    if(!history.length){box.innerHTML='<div class="empty">لا توجد قراءات بعد</div>';return}
+    box.innerHTML="";
+    history.forEach(x=>{
+      const d=document.createElement("div"); d.className="item";
+      const left=document.createElement("div");
+      left.innerHTML=`<div class="v">${esc(x.v)}</div><div class="meta">${esc(x.f)} • ${esc(x.t)}</div>`;
+      const b=document.createElement("button"); b.className="mini"; b.textContent="نسخ";
+      b.onclick=()=>copyText(x.v);
+      d.append(left,b); box.appendChild(d);
+    });
+  }
+  function esc(s){return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
+  async function copyText(t){try{await navigator.clipboard.writeText(t)}catch{}}
+  function beep(){
+    try{
+      const A=window.AudioContext||window.webkitAudioContext,c=new A(),o=c.createOscillator(),g=c.createGain();
+      o.frequency.value=950;g.gain.value=.12;o.connect(g).connect(c.destination);o.start();o.stop(c.currentTime+.09);o.onended=()=>c.close();
+    }catch{}
+    navigator.vibrate?.([70,35,70]);
+  }
+  function found(v,f){
+    const now=Date.now();
+    if(!v || (v===last && now-lastAt<1500)) return;
+    last=v;lastAt=now;code.textContent=v;format.textContent=f||"Barcode";
+    history=history.filter(x=>x.v!==v);
+    history.unshift({v,f:f||"Barcode",t:new Date().toLocaleString("ar-SA")});
+    history=history.slice(0,30);save();render();beep();
+    tip.textContent="تمت القراءة — انتقل إلى باركود آخر";
+    setTimeout(()=>{if(running)tip.textContent="قرّب الباركود حتى يملأ معظم الإطار الأخضر"},1200);
+  }
+
+  async function setupCamera(){
+    stop();
+    status.textContent="جاري تشغيل الكاميرا…";
+    stream=await navigator.mediaDevices.getUserMedia({
+      video:{
+        facingMode:{ideal:"environment"},
+        width:{ideal:1280},
+        height:{ideal:720},
+        frameRate:{ideal:30,max:30}
+      }, audio:false
+    });
+    video.srcObject=stream;
+    await video.play();
+    track=stream.getVideoTracks()[0];
+    await applyCameraFeatures();
+  }
+
+  async function applyCameraFeatures(){
+    if(!track) return;
+    const caps=track.getCapabilities?.()||{};
+    const adv={};
+    if(caps.focusMode?.includes("continuous")) adv.focusMode="continuous";
+    try{if(Object.keys(adv).length) await track.applyConstraints({advanced:[adv]})}catch{}
+
+    if(caps.torch){torchBtn.hidden=false}else{torchBtn.hidden=true}
+    if(caps.zoom){
+      zoom.min=caps.zoom.min;zoom.max=caps.zoom.max;zoom.step=caps.zoom.step||0.1;
+      const initial=Math.min(Math.max(caps.zoom.min,1.6),caps.zoom.max);
+      zoom.value=initial;zoomVal.textContent=Number(initial).toFixed(1)+"×";
+      zoomBox.classList.add("show");
+      try{await track.applyConstraints({advanced:[{zoom:initial}]})}catch{}
+    } else zoomBox.classList.remove("show");
+  }
+
+  zoom.oninput=async()=>{
+    const v=Number(zoom.value);zoomVal.textContent=v.toFixed(1)+"×";
+    try{await track?.applyConstraints({advanced:[{zoom:v}]})}catch{}
+  };
+
+  torchBtn.onclick=async()=>{
+    if(!track)return;
+    torchOn=!torchOn;
+    try{
+      await track.applyConstraints({advanced:[{torch:torchOn}]});
+      torchBtn.textContent=torchOn?"إطفاء الإضاءة":"إضاءة";
+    }catch{torchOn=false}
+  };
+
+  async function initEngine(){
+    if("BarcodeDetector" in window){
+      try{
+        const supported=await BarcodeDetector.getSupportedFormats();
+        const fmts=nativeWanted.filter(x=>supported.includes(x));
+        if(fmts.length){
+          detector=new BarcodeDetector({formats:fmts});
+          engine.textContent="المحرك: Native";
+          return "native";
+        }
+      }catch{}
+    }
+    engine.textContent="المحرك: ZXing";
+    return "zxing";
+  }
+
+  function cropFrame(){
+    if(video.readyState<2) return null;
+    const vw=video.videoWidth,vh=video.videoHeight;
+    if(!vw||!vh) return null;
+    const sx=Math.floor(vw*0.06), sy=Math.floor(vh*0.34), sw=Math.floor(vw*0.88), sh=Math.floor(vh*0.32);
+    const targetW=Math.min(1100,sw), scale=targetW/sw, targetH=Math.floor(sh*scale);
+    crop.width=targetW;crop.height=targetH;
+    ctx.drawImage(video,sx,sy,sw,sh,0,0,targetW,targetH);
+    return crop;
+  }
+
+  async function nativeLoop(){
+    if(!running||!detector)return;
+    if(!busy){
+      busy=true;
+      try{
+        const src=cropFrame();
+        if(src){
+          const arr=await detector.detect(src);
+          if(arr?.length) found(arr[0].rawValue,arr[0].format);
+        }
+      }catch{}
+      busy=false;
+      tickFPS();
+    }
+    if(running) setTimeout(nativeLoop,70);
+  }
+
+  async function zxingLoop(){
+    if(!running)return;
+    if(!zxing){
+      const hints=new Map();
+      hints.set(ZXing.DecodeHintType.POSSIBLE_FORMATS,[
+        ZXing.BarcodeFormat.EAN_13,ZXing.BarcodeFormat.EAN_8,ZXing.BarcodeFormat.UPC_A,
+        ZXing.BarcodeFormat.UPC_E,ZXing.BarcodeFormat.CODE_128,ZXing.BarcodeFormat.CODE_39,
+        ZXing.BarcodeFormat.CODE_93,ZXing.BarcodeFormat.ITF,ZXing.BarcodeFormat.CODABAR
+      ]);
+      hints.set(ZXing.DecodeHintType.TRY_HARDER,true);
+      zxing=new ZXing.BrowserMultiFormatReader(hints);
+    }
+    if(!busy){
+      busy=true;
+      try{
+        const src=cropFrame();
+        if(src){
+          const luminance=new ZXing.HTMLCanvasElementLuminanceSource(src);
+          const bitmap=new ZXing.BinaryBitmap(new ZXing.HybridBinarizer(luminance));
+          const r=zxing.decodeBitmap(bitmap);
+          if(r) found(r.getText(),String(r.getBarcodeFormat()));
+        }
+      }catch(e){}
+      busy=false;tickFPS();
+    }
+    if(running) setTimeout(zxingLoop,95);
+  }
+
+  function tickFPS(){
+    frames++;
+    const now=performance.now();
+    if(now-fpsStart>1000){
+      fps.textContent=Math.round(frames*1000/(now-fpsStart))+" فحص/ث";
+      frames=0;fpsStart=now;
+    }
+  }
+
+  async function start(){
+    if(running)return;
+    try{
+      if(!window.isSecureContext && location.hostname!=="localhost" && location.hostname!=="127.0.0.1"){
+        status.textContent="يجب تشغيل الصفحة عبر HTTPS";return;
+      }
+      await setupCamera();
+      const mode=await initEngine();
+      running=true;status.textContent="الكاميرا تعمل";
+      tip.textContent="قرّب الباركود حتى يملأ معظم الإطار الأخضر";
+      mode==="native"?nativeLoop():zxingLoop();
+    }catch(e){
+      status.textContent=e.name==="NotAllowedError"?"تم رفض إذن الكاميرا":"تعذر تشغيل الكاميرا";
+    }
+  }
+
+  function stop(){
+    running=false;busy=false;torchOn=false;
+    try{zxing?.reset()}catch{}
+    if(stream){stream.getTracks().forEach(t=>t.stop());stream=null}
+    video.srcObject=null;track=null;
+    status.textContent="الكاميرا متوقفة";fps.textContent="";
+  }
+
+  $("start").onclick=start;
+  $("stop").onclick=stop;
+  $("copy").onclick=()=>{if(code.textContent!=="—")copyText(code.textContent)};
+  $("clear").onclick=()=>{history=[];save();render()};
+  render();
+  window.addEventListener("load",start);
+  document.addEventListener("visibilitychange",()=>{if(document.hidden)stop()});
+})();
+</script>
+</body>
+</html>
