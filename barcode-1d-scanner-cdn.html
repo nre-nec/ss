@@ -1,0 +1,463 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="theme-color" content="#0f172a" />
+  <title>قارئ الباركود 1D</title>
+  <style>
+    :root{
+      --bg:#0f172a;
+      --panel:#111827;
+      --panel2:#1f2937;
+      --text:#f8fafc;
+      --muted:#94a3b8;
+      --accent:#22c55e;
+      --accent2:#16a34a;
+      --danger:#ef4444;
+      --line:rgba(255,255,255,.12);
+      --shadow:0 18px 40px rgba(0,0,0,.28);
+      --radius:22px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      min-height:100vh;
+      font-family:system-ui,-apple-system,"Segoe UI",Tahoma,Arial,sans-serif;
+      background:
+        radial-gradient(circle at top right, rgba(34,197,94,.12), transparent 32%),
+        linear-gradient(180deg,#0b1220 0%,#0f172a 100%);
+      color:var(--text);
+    }
+    .app{width:min(100%,720px);margin:auto;padding:18px 16px 32px}
+    header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}
+    .title h1{font-size:clamp(1.25rem,4vw,1.75rem);margin:0 0 4px}
+    .title p{margin:0;color:var(--muted);font-size:.9rem}
+    .badge{
+      padding:8px 11px;border:1px solid var(--line);border-radius:999px;
+      color:#bbf7d0;background:rgba(34,197,94,.08);font-size:.78rem;white-space:nowrap
+    }
+    .card{
+      background:rgba(17,24,39,.88);
+      border:1px solid var(--line);
+      box-shadow:var(--shadow);
+      border-radius:var(--radius);
+      overflow:hidden;
+      backdrop-filter:blur(12px);
+    }
+    .camera-wrap{position:relative;aspect-ratio:4/3;background:#020617;overflow:hidden}
+    video{width:100%;height:100%;object-fit:cover;display:block}
+    .shade{
+      position:absolute;inset:0;
+      background:
+        linear-gradient(rgba(0,0,0,.42),rgba(0,0,0,.42));
+      pointer-events:none;
+    }
+    .scan-zone{
+      position:absolute;
+      left:7%;right:7%;top:36%;height:28%;
+      border:2px solid rgba(255,255,255,.92);
+      border-radius:18px;
+      box-shadow:0 0 0 9999px rgba(0,0,0,.35);
+      pointer-events:none;
+    }
+    .scan-zone::before,.scan-zone::after{
+      content:"";position:absolute;width:28px;height:28px;border-color:var(--accent)
+    }
+    .scan-zone::before{right:-2px;top:-2px;border-top:4px solid var(--accent);border-right:4px solid var(--accent);border-top-right-radius:14px}
+    .scan-zone::after{left:-2px;bottom:-2px;border-bottom:4px solid var(--accent);border-left:4px solid var(--accent);border-bottom-left-radius:14px}
+    .scan-line{
+      position:absolute;left:4%;right:4%;height:2px;top:12%;
+      background:linear-gradient(90deg,transparent,var(--accent),transparent);
+      box-shadow:0 0 12px var(--accent);
+      animation:scan 2s linear infinite;
+    }
+    @keyframes scan{0%{top:12%}50%{top:86%}100%{top:12%}}
+    .camera-msg{
+      position:absolute;left:12px;right:12px;bottom:12px;
+      padding:10px 12px;border-radius:14px;background:rgba(2,6,23,.72);
+      border:1px solid rgba(255,255,255,.09);text-align:center;font-size:.86rem
+    }
+    .content{padding:14px}
+    .status{
+      display:flex;align-items:center;justify-content:space-between;gap:10px;
+      margin-bottom:12px;padding:10px 12px;border-radius:14px;background:var(--panel2)
+    }
+    .dot{width:10px;height:10px;border-radius:50%;background:#64748b;box-shadow:0 0 0 5px rgba(100,116,139,.13)}
+    .status.live .dot{background:var(--accent);box-shadow:0 0 0 5px rgba(34,197,94,.13)}
+    .status.error .dot{background:var(--danger);box-shadow:0 0 0 5px rgba(239,68,68,.13)}
+    .status-text{display:flex;align-items:center;gap:9px;font-size:.9rem}
+    .result{
+      border:1px solid var(--line);border-radius:16px;padding:13px;background:#0b1220;margin-bottom:12px
+    }
+    .result small{display:block;color:var(--muted);margin-bottom:6px}
+    .code{font:700 clamp(1.25rem,6vw,2rem)/1.2 ui-monospace,SFMono-Regular,Menlo,monospace;word-break:break-all;direction:ltr;text-align:center}
+    .format{text-align:center;color:#86efac;font-size:.82rem;margin-top:5px;min-height:1em}
+    .actions{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    button{
+      appearance:none;border:0;border-radius:14px;padding:13px 14px;font:inherit;font-weight:700;cursor:pointer;
+      transition:.2s transform,.2s opacity,.2s background
+    }
+    button:active{transform:scale(.98)}
+    .primary{background:var(--accent);color:#052e16}
+    .primary:hover{background:var(--accent2);color:#fff}
+    .secondary{background:#334155;color:#fff}
+    .danger{background:#3f1d24;color:#fecaca;border:1px solid rgba(239,68,68,.2)}
+    .wide{grid-column:1/-1}
+    .history{margin-top:16px}
+    .history-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+    .history h2{font-size:1rem;margin:0}
+    .link-btn{background:transparent;color:#cbd5e1;padding:6px 8px;font-weight:600}
+    .list{display:grid;gap:8px}
+    .item{
+      display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;
+      padding:11px 12px;border:1px solid var(--line);border-radius:14px;background:rgba(15,23,42,.75)
+    }
+    .item-code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;direction:ltr;text-align:left;word-break:break-all}
+    .item-meta{font-size:.75rem;color:var(--muted);margin-top:2px}
+    .mini{padding:7px 9px;border-radius:10px;background:#1e293b;color:white;font-size:.8rem}
+    .empty{color:var(--muted);text-align:center;padding:18px 8px;border:1px dashed var(--line);border-radius:14px}
+    .note{color:var(--muted);font-size:.78rem;line-height:1.7;margin:14px 4px 0}
+    .toast{
+      position:fixed;left:50%;bottom:calc(22px + env(safe-area-inset-bottom));transform:translate(-50%,20px);
+      background:#111827;color:white;border:1px solid var(--line);box-shadow:var(--shadow);
+      padding:10px 14px;border-radius:12px;opacity:0;pointer-events:none;transition:.25s;z-index:30
+    }
+    .toast.show{opacity:1;transform:translate(-50%,0)}
+    @media (max-width:480px){.app{padding:12px 10px 24px}.actions{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <main class="app">
+    <header>
+      <div class="title">
+        <h1>قارئ الباركود 1D</h1>
+        <p>EAN‑13 • EAN‑8 • UPC • Code 128 • Code 39 • ITF</p>
+      </div>
+      <div class="badge">نسخة CDN الخفيفة</div>
+    </header>
+
+    <section class="card">
+      <div class="camera-wrap">
+        <video id="video" playsinline muted></video>
+        <div class="scan-zone" aria-hidden="true"><div class="scan-line"></div></div>
+        <div class="camera-msg" id="cameraMsg">وجّه الباركود داخل الإطار وبشكل أفقي</div>
+      </div>
+
+      <div class="content">
+        <div class="status" id="statusBox">
+          <div class="status-text"><span class="dot"></span><span id="statusText">جارٍ تهيئة القارئ…</span></div>
+          <span id="cameraName" style="color:var(--muted);font-size:.78rem"></span>
+        </div>
+
+        <div class="result">
+          <small>آخر كود مقروء</small>
+          <div class="code" id="resultCode">—</div>
+          <div class="format" id="resultFormat"></div>
+        </div>
+
+        <div class="actions">
+          <button class="primary" id="startBtn">تشغيل الكاميرا</button>
+          <button class="secondary" id="copyBtn" disabled>نسخ الرقم</button>
+          <button class="danger wide" id="stopBtn" disabled>إيقاف الكاميرا</button>
+        </div>
+
+        <section class="history">
+          <div class="history-head">
+            <h2>آخر القراءات</h2>
+            <button class="link-btn" id="clearBtn">مسح السجل</button>
+          </div>
+          <div class="list" id="historyList"></div>
+        </section>
+
+        <p class="note">
+          ملاحظة: الوصول إلى الكاميرا من المتصفح يحتاج عادةً إلى HTTPS، أو localhost أثناء التطوير.
+          تحتفظ الصفحة بالسجل داخل المتصفح فقط.
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <div class="toast" id="toast"></div>
+
+  <script src="https://unpkg.com/@zxing/library@0.21.3/umd/index.min.js"></script>
+  <script>
+    (() => {
+      const $ = (id) => document.getElementById(id);
+      const video = $("video");
+      const statusBox = $("statusBox");
+      const statusText = $("statusText");
+      const cameraName = $("cameraName");
+      const resultCode = $("resultCode");
+      const resultFormat = $("resultFormat");
+      const startBtn = $("startBtn");
+      const stopBtn = $("stopBtn");
+      const copyBtn = $("copyBtn");
+      const clearBtn = $("clearBtn");
+      const historyList = $("historyList");
+      const toast = $("toast");
+      const cameraMsg = $("cameraMsg");
+
+      let reader = null;
+      let running = false;
+      let lastValue = "";
+      let lastScanAt = 0;
+      let history = loadHistory();
+
+      const allowedFormats = [
+        ZXing.BarcodeFormat.EAN_13,
+        ZXing.BarcodeFormat.EAN_8,
+        ZXing.BarcodeFormat.UPC_A,
+        ZXing.BarcodeFormat.UPC_E,
+        ZXing.BarcodeFormat.CODE_128,
+        ZXing.BarcodeFormat.CODE_39,
+        ZXing.BarcodeFormat.CODE_93,
+        ZXing.BarcodeFormat.ITF,
+        ZXing.BarcodeFormat.CODABAR
+      ];
+
+      const hints = new Map();
+      hints.set(ZXing.DecodeHintType.POSSIBLE_FORMATS, allowedFormats);
+      hints.set(ZXing.DecodeHintType.TRY_HARDER, true);
+
+      function setStatus(text, type = "") {
+        statusText.textContent = text;
+        statusBox.className = "status" + (type ? " " + type : "");
+      }
+
+      function showToast(text) {
+        toast.textContent = text;
+        toast.classList.add("show");
+        clearTimeout(showToast.t);
+        showToast.t = setTimeout(() => toast.classList.remove("show"), 1800);
+      }
+
+      function beep() {
+        try {
+          const AudioContext = window.AudioContext || window.webkitAudioContext;
+          const ctx = new AudioContext();
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = "sine";
+          osc.frequency.value = 880;
+          gain.gain.setValueAtTime(0.0001, ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.16, ctx.currentTime + 0.01);
+          gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.13);
+          osc.connect(gain).connect(ctx.destination);
+          osc.start();
+          osc.stop(ctx.currentTime + 0.14);
+          osc.onended = () => ctx.close();
+        } catch {}
+      }
+
+      function vibrate() {
+        if (navigator.vibrate) navigator.vibrate([80, 40, 80]);
+      }
+
+      function formatName(fmt) {
+        const map = {};
+        Object.keys(ZXing.BarcodeFormat).forEach(k => {
+          const v = ZXing.BarcodeFormat[k];
+          if (typeof v === "number") map[v] = k.replaceAll("_", "-");
+        });
+        return map[fmt] || "1D Barcode";
+      }
+
+      function saveHistory() {
+        localStorage.setItem("barcode1d_history", JSON.stringify(history.slice(0, 30)));
+      }
+
+      function loadHistory() {
+        try { return JSON.parse(localStorage.getItem("barcode1d_history") || "[]"); }
+        catch { return []; }
+      }
+
+      function renderHistory() {
+        if (!history.length) {
+          historyList.innerHTML = '<div class="empty">لا توجد قراءات بعد</div>';
+          return;
+        }
+        historyList.innerHTML = "";
+        history.forEach((item) => {
+          const row = document.createElement("div");
+          row.className = "item";
+          row.innerHTML = `
+            <div>
+              <div class="item-code">${escapeHtml(item.value)}</div>
+              <div class="item-meta">${escapeHtml(item.format)} • ${escapeHtml(item.time)}</div>
+            </div>
+            <button class="mini" data-copy="${encodeURIComponent(item.value)}">نسخ</button>
+          `;
+          historyList.appendChild(row);
+        });
+        historyList.querySelectorAll("[data-copy]").forEach(btn => {
+          btn.addEventListener("click", () => copyText(decodeURIComponent(btn.dataset.copy)));
+        });
+      }
+
+      function escapeHtml(str) {
+        return String(str).replace(/[&<>"']/g, m => ({
+          "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
+        }[m]));
+      }
+
+      async function copyText(text) {
+        try {
+          await navigator.clipboard.writeText(text);
+          showToast("تم نسخ الرقم");
+        } catch {
+          const ta = document.createElement("textarea");
+          ta.value = text; document.body.appendChild(ta); ta.select();
+          document.execCommand("copy"); ta.remove();
+          showToast("تم نسخ الرقم");
+        }
+      }
+
+      function onDetected(result) {
+        const value = result.getText();
+        const now = Date.now();
+
+        if (!value) return;
+        if (value === lastValue && now - lastScanAt < 1800) return;
+
+        lastValue = value;
+        lastScanAt = now;
+
+        const fmt = formatName(result.getBarcodeFormat());
+        resultCode.textContent = value;
+        resultFormat.textContent = fmt;
+        copyBtn.disabled = false;
+
+        history = history.filter(x => x.value !== value);
+        history.unshift({
+          value,
+          format: fmt,
+          time: new Date().toLocaleString("ar-SA", { hour12: true })
+        });
+        history = history.slice(0, 30);
+        saveHistory();
+        renderHistory();
+
+        beep();
+        vibrate();
+        showToast("تمت قراءة الباركود");
+        cameraMsg.textContent = "تمت القراءة — يمكنك مسح باركود آخر";
+      }
+
+      async function startCamera() {
+        if (running) return;
+
+        if (!window.isSecureContext && location.hostname !== "localhost" && location.hostname !== "127.0.0.1") {
+          setStatus("يجب فتح الصفحة عبر HTTPS للسماح بالكاميرا", "error");
+          return;
+        }
+
+        try {
+          setStatus("جاري تشغيل الكاميرا…");
+          startBtn.disabled = true;
+
+          reader = new ZXing.BrowserMultiFormatReader(hints, 250);
+
+          let devices = [];
+          try { devices = await reader.listVideoInputDevices(); } catch {}
+
+          let deviceId = null;
+          if (devices.length) {
+            const rear = devices.find(d => /back|rear|environment|خلف/i.test(d.label));
+            const chosen = rear || devices[devices.length - 1];
+            deviceId = chosen.deviceId;
+            cameraName.textContent = chosen.label || "الكاميرا الخلفية";
+          } else {
+            cameraName.textContent = "الكاميرا";
+          }
+
+          const constraints = {
+            video: {
+              facingMode: { ideal: "environment" },
+              width: { ideal: 1920 },
+              height: { ideal: 1080 },
+              focusMode: "continuous"
+            },
+            audio: false
+          };
+
+          if (deviceId) {
+            constraints.video.deviceId = { exact: deviceId };
+            delete constraints.video.facingMode;
+          }
+
+          await reader.decodeFromConstraints(constraints, video, (result, err) => {
+            if (result) onDetected(result);
+            if (err && !(err instanceof ZXing.NotFoundException)) {
+              console.warn(err);
+            }
+          });
+
+          running = true;
+          startBtn.disabled = true;
+          stopBtn.disabled = false;
+          setStatus("الكاميرا تعمل — وجّه الباركود داخل الإطار", "live");
+          cameraMsg.textContent = "وجّه الباركود داخل الإطار وبشكل أفقي";
+        } catch (err) {
+          console.error(err);
+          startBtn.disabled = false;
+          stopBtn.disabled = true;
+          running = false;
+
+          let msg = "تعذر تشغيل الكاميرا.";
+          if (err && (err.name === "NotAllowedError" || err.name === "PermissionDeniedError")) {
+            msg = "تم رفض إذن الكاميرا. اسمح بالوصول من إعدادات المتصفح.";
+          } else if (err && err.name === "NotFoundError") {
+            msg = "لم يتم العثور على كاميرا مناسبة.";
+          } else if (err && err.name === "NotReadableError") {
+            msg = "الكاميرا مستخدمة من تطبيق آخر أو يتعذر الوصول إليها.";
+          }
+          setStatus(msg, "error");
+        }
+      }
+
+      function stopCamera() {
+        try { if (reader) reader.reset(); } catch {}
+        if (video.srcObject) {
+          video.srcObject.getTracks().forEach(t => t.stop());
+          video.srcObject = null;
+        }
+        running = false;
+        startBtn.disabled = false;
+        stopBtn.disabled = true;
+        setStatus("الكاميرا متوقفة");
+        cameraName.textContent = "";
+        cameraMsg.textContent = "اضغط «تشغيل الكاميرا» لبدء المسح";
+      }
+
+      startBtn.addEventListener("click", startCamera);
+      stopBtn.addEventListener("click", stopCamera);
+      copyBtn.addEventListener("click", () => {
+        if (resultCode.textContent !== "—") copyText(resultCode.textContent);
+      });
+      clearBtn.addEventListener("click", () => {
+        history = [];
+        saveHistory();
+        renderHistory();
+        showToast("تم مسح السجل");
+      });
+
+      renderHistory();
+
+      window.addEventListener("load", () => {
+        if (typeof ZXing === "undefined") {
+          setStatus("تعذر تحميل مكتبة القراءة. تحقق من اتصال الإنترنت.", "error");
+          startBtn.disabled = true;
+          return;
+        }
+        setStatus("جاهز لتشغيل الكاميرا");
+        startCamera();
+      });
+
+      document.addEventListener("visibilitychange", () => {
+        if (document.hidden && running) stopCamera();
+      });
+    })();
+  </script>
+</body>
+</html>
