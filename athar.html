@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#123d36">
+  <meta name="description" content="تصور تفاعلي لنظام أثر لتوثيق إنجازات وحدة التطوير والجودة وتحويلها إلى مؤشرات أداء شهرية وربع سنوية.">
+  <title>أثر | تصور نظام توثيق الإنجازات ومؤشرات الأداء</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23123d36'/%3E%3Cpath d='M17 42V30m15 12V20m15 22V12' stroke='%23d9b46d' stroke-width='7' stroke-linecap='round'/%3E%3C/svg%3E">
+  <style>
+    :root{--ink:#17342f;--green:#123d36;--green-2:#1e5a50;--mint:#e8f1ee;--paper:#f7f8f5;--white:#fff;--gold:#c99a43;--gold-soft:#f4ead5;--red:#b74747;--line:#dbe5e1;--muted:#60736f;--shadow:0 18px 55px rgba(15,55,48,.11);--radius:24px}
+    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--paper);color:var(--ink);font-family:"Tahoma","Arial",sans-serif;line-height:1.75}button,input,select,textarea{font:inherit}button{cursor:pointer}.wrap{width:min(1160px,calc(100% - 32px));margin:auto}
+    .topbar{position:sticky;top:0;z-index:20;background:rgba(247,248,245,.92);backdrop-filter:blur(15px);border-bottom:1px solid rgba(18,61,54,.09)}.nav{height:72px;display:flex;align-items:center;justify-content:space-between;gap:20px}.brand{display:flex;align-items:center;gap:12px;font-weight:800}.mark{width:42px;height:42px;border-radius:13px;background:var(--green);display:grid;place-items:center;box-shadow:0 8px 20px rgba(18,61,54,.22)}.mark span{display:flex;align-items:end;gap:3px;height:22px}.mark i{display:block;width:5px;background:var(--gold);border-radius:5px}.mark i:nth-child(1){height:10px}.mark i:nth-child(2){height:16px}.mark i:nth-child(3){height:22px}.brand small{display:block;color:var(--muted);font-weight:400;font-size:.75rem;line-height:1.2}.nav-actions{display:flex;gap:8px}.btn{border:0;border-radius:12px;padding:10px 16px;background:var(--green);color:white;font-weight:700}.btn.secondary{background:white;color:var(--green);border:1px solid var(--line)}
+    .hero{padding:58px 0 35px}.hero-grid{display:grid;grid-template-columns:1.1fr .9fr;align-items:center;gap:42px}.eyebrow{color:var(--green-2);font-size:.86rem;font-weight:800;display:flex;align-items:center;gap:8px}.eyebrow:before{content:"";width:26px;height:3px;border-radius:4px;background:var(--gold)}h1{font-size:clamp(2.2rem,5vw,4.65rem);line-height:1.1;margin:14px 0 18px;letter-spacing:-2px}.hero h1 em{font-style:normal;color:var(--gold)}.lead{font-size:1.08rem;color:var(--muted);max-width:680px;margin:0}.hero-points{display:flex;gap:10px;flex-wrap:wrap;margin-top:24px}.pill{padding:7px 12px;border-radius:999px;background:white;border:1px solid var(--line);font-size:.86rem;font-weight:700}.idea-card{background:var(--green);color:white;border-radius:34px;padding:26px;box-shadow:var(--shadow);position:relative;overflow:hidden}.idea-card:after{content:"";position:absolute;width:220px;height:220px;border-radius:50%;background:rgba(201,154,67,.17);left:-70px;top:-80px}.idea-card h2{margin:0 0 18px;font-size:1.25rem}.flow{display:grid;gap:10px;position:relative;z-index:1}.flow-step{display:grid;grid-template-columns:44px 1fr;gap:12px;align-items:center;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);padding:12px;border-radius:16px}.num{width:38px;height:38px;border-radius:12px;background:var(--gold);color:var(--green);display:grid;place-items:center;font-weight:900}.flow-step strong{display:block}.flow-step small{color:#cfe1dc}
+    section{padding:54px 0}.section-head{display:flex;justify-content:space-between;align-items:end;gap:25px;margin-bottom:24px}.section-head h2{font-size:clamp(1.65rem,3vw,2.5rem);line-height:1.25;margin:0}.section-head p{max-width:590px;color:var(--muted);margin:0}.demo{display:grid;grid-template-columns:.92fr 1.08fr;gap:20px}.panel{background:white;border:1px solid var(--line);border-radius:var(--radius);box-shadow:0 10px 35px rgba(15,55,48,.06);overflow:hidden}.panel-head{padding:18px 20px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:15px}.panel-head h3{margin:0;font-size:1rem}.tag{background:var(--mint);color:var(--green);font-size:.75rem;font-weight:800;padding:4px 9px;border-radius:99px}.form{padding:20px;display:grid;gap:14px}.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}.field label{display:block;font-weight:700;font-size:.82rem;margin-bottom:5px}.field input,.field select,.field textarea{width:100%;border:1px solid var(--line);background:#fbfcfb;border-radius:12px;padding:11px 12px;color:var(--ink);outline:0}.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--gold);box-shadow:0 0 0 3px var(--gold-soft)}.field textarea{min-height:78px;resize:vertical}.range-row{display:grid;grid-template-columns:1fr 52px;align-items:center;gap:10px}.range-row input{accent-color:var(--gold)}.range-value{text-align:center;font-weight:900;color:var(--green)}.save{width:100%;padding:13px}.note{font-size:.79rem;color:var(--muted);margin:0}.success{display:none;border-radius:12px;background:#e5f5eb;color:#17623a;padding:10px 12px;font-size:.85rem;font-weight:700}.success.show{display:block}
+    .dash{padding:20px}.tabs{display:flex;gap:7px;background:var(--paper);padding:5px;border-radius:13px;margin-bottom:16px}.tabs button{flex:1;border:0;padding:9px;border-radius:9px;background:transparent;color:var(--muted);font-weight:800}.tabs button.active{background:white;color:var(--green);box-shadow:0 3px 10px rgba(15,55,48,.1)}.kpis{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.kpi{border:1px solid var(--line);border-radius:16px;padding:14px}.kpi small{color:var(--muted);display:block}.kpi strong{font-size:1.65rem;line-height:1.3}.kpi .change{font-size:.75rem;color:#27724d}.progress-wrap{margin-top:14px;background:var(--green);border-radius:18px;padding:16px;color:white}.progress-top{display:flex;justify-content:space-between}.bar{height:9px;background:rgba(255,255,255,.16);border-radius:99px;margin-top:12px;overflow:hidden}.bar span{display:block;height:100%;width:90%;background:var(--gold);border-radius:inherit;transition:.4s}.chart{height:145px;display:flex;align-items:end;gap:12px;padding-top:25px}.col{flex:1;text-align:center;color:var(--muted);font-size:.72rem}.col i{display:block;background:linear-gradient(180deg,var(--gold),#e7c98f);border-radius:9px 9px 3px 3px;min-height:12px;margin-bottom:5px;transition:.4s}
+    .principle{background:var(--gold-soft);border:1px solid #ead7b5;border-radius:22px;padding:20px 22px;margin-top:20px;display:flex;gap:14px;align-items:flex-start}.principle b{font-size:1.5rem;color:var(--gold)}.principle p{margin:0}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.card{background:white;border:1px solid var(--line);border-radius:20px;padding:20px}.icon{width:44px;height:44px;border-radius:13px;background:var(--mint);display:grid;place-items:center;color:var(--green);font-size:1.25rem;font-weight:900}.card h3{font-size:1rem;margin:13px 0 5px}.card p{font-size:.88rem;color:var(--muted);margin:0}.metric-list{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.metric{background:white;border-radius:18px;padding:17px;border:1px solid var(--line);display:flex;align-items:center;gap:12px}.metric-number{width:38px;height:38px;flex:none;border-radius:12px;background:var(--green);color:white;display:grid;place-items:center;font-weight:900}.metric strong{font-size:.9rem}.metric small{display:block;color:var(--muted)}
+    .output-shell{background:var(--green);border-radius:32px;padding:26px;color:white;box-shadow:var(--shadow)}.output-heading{display:flex;justify-content:space-between;align-items:end;gap:20px;margin-bottom:18px}.output-heading h2{font-size:2rem;margin:5px 0}.output-heading p{color:#cfe1dc;margin:0;max-width:680px}.output-tabs{display:flex;gap:7px;background:rgba(255,255,255,.08);padding:5px;border-radius:14px;min-width:310px}.output-tabs button{flex:1;border:0;border-radius:10px;padding:10px;background:transparent;color:#dbe8e4;font-weight:800}.output-tabs button.active{background:white;color:var(--green)}.output-pane{display:none}.output-pane.active{display:block}.report-intro{display:grid;grid-template-columns:1fr .85fr;gap:20px;align-items:center}.report-list{display:grid;grid-template-columns:1fr 1fr;gap:10px}.report-list span{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:10px 12px;font-size:.87rem}.mock-report{background:white;color:var(--ink);padding:20px;border-radius:20px;transform:rotate(-1.2deg);box-shadow:0 25px 60px rgba(0,0,0,.22)}.mock-report .line{height:8px;background:var(--line);border-radius:10px;margin-top:9px}.mock-report .line.gold{background:var(--gold);width:65%}.mini-kpis{display:flex;gap:7px;margin:15px 0}.mini-kpis i{height:52px;flex:1;background:var(--mint);border-radius:9px}
+    .report-workspace{background:#eef2ef;color:var(--ink);border-radius:22px;padding:16px}.report-toolbar{display:grid;grid-template-columns:1.1fr 1fr 1fr auto;gap:10px;align-items:end;margin-bottom:14px}.report-toolbar label{display:block;font-size:.76rem;font-weight:800;margin-bottom:4px}.report-toolbar select,.report-toolbar input{width:100%;border:1px solid var(--line);border-radius:10px;padding:9px 10px;background:white}.date-fields{display:contents}.report-actions{display:flex;gap:7px}.report-actions .btn{white-space:nowrap;padding:9px 12px}.report-actions .secondary{background:white}.final-report{background:white;border-radius:16px;padding:24px;box-shadow:0 8px 25px rgba(15,55,48,.08)}.report-brand{display:flex;justify-content:space-between;gap:20px;border-bottom:2px solid var(--green);padding-bottom:14px}.report-brand h3{margin:0;font-size:1.15rem}.report-brand p,.report-brand small{margin:0;color:var(--muted);font-size:.78rem}.report-stamp{text-align:left}.report-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:16px 0}.report-kpi{background:var(--mint);border-radius:12px;padding:11px}.report-kpi small{display:block;color:var(--muted);font-size:.7rem}.report-kpi strong{font-size:1.25rem}.executive{border-right:4px solid var(--gold);background:var(--gold-soft);border-radius:10px;padding:10px 12px;font-size:.82rem;margin-bottom:14px}.report-columns{display:grid;grid-template-columns:1fr .82fr;gap:14px}.report-block{border:1px solid var(--line);border-radius:12px;padding:12px}.report-block h4{font-size:.86rem;margin:0 0 8px}.report-bars{display:grid;gap:7px}.report-bar{display:grid;grid-template-columns:78px 1fr 35px;gap:7px;align-items:center;font-size:.7rem}.report-bar i{height:7px;border-radius:99px;background:var(--line);overflow:hidden}.report-bar i:after{content:"";display:block;height:100%;width:var(--w);background:var(--green);border-radius:inherit}.report-table{width:100%;border-collapse:collapse;font-size:.69rem;margin-top:14px}.report-table th,.report-table td{padding:7px;border-bottom:1px solid var(--line);text-align:right}.report-table th{background:#f4f7f5}.state{display:inline-block;padding:2px 6px;border-radius:99px;background:#e5f5eb;color:#17623a;font-weight:800}.state.wait{background:#fff1d7;color:#8b5b00}.footer{padding:30px 0 45px;color:var(--muted);font-size:.82rem}.footer-inner{border-top:1px solid var(--line);padding-top:20px;display:flex;justify-content:space-between;gap:15px}.only-print{display:none}
+    @media(max-width:850px){.hero-grid,.demo,.report-intro{grid-template-columns:1fr}.hero{padding-top:38px}.idea-card{max-width:600px}.grid3,.metric-list{grid-template-columns:1fr 1fr}.mock-report{transform:none}.section-head{display:block}.section-head p{margin-top:8px}.output-heading{display:block}.output-tabs{margin-top:15px;min-width:0}.report-toolbar{grid-template-columns:1fr 1fr}.report-actions{grid-column:1/-1}.report-columns{grid-template-columns:1fr}}
+    @media(max-width:540px){.wrap{width:min(100% - 22px,1160px)}.nav{height:64px}.brand small,.nav .secondary{display:none}h1{letter-spacing:-1px}.hero-points{gap:7px}.pill{font-size:.77rem}.two,.grid3,.metric-list{grid-template-columns:1fr}.kpis{grid-template-columns:1fr 1fr}.kpi{padding:11px}.kpi strong{font-size:1.35rem}.report-list,.report-toolbar{grid-template-columns:1fr}.report-actions{grid-column:auto;flex-wrap:wrap}.report-kpis{grid-template-columns:1fr 1fr}.final-report{padding:15px;overflow:auto}.report-table{min-width:620px}.flow-step{grid-template-columns:38px 1fr}.idea-card{padding:19px;border-radius:24px}.output-shell{padding:16px;border-radius:24px}section{padding:40px 0}}
+    @media print{body.print-final *{visibility:hidden}body.print-final #printableReport,body.print-final #printableReport *{visibility:visible}body.print-final #printableReport{position:absolute;inset:0;width:100%;box-shadow:none;border-radius:0}body:not(.print-final) .topbar,body:not(.print-final) .form-panel,body:not(.print-final) .tabs,body:not(.print-final) .footer,body:not(.print-final) .btn{display:none!important}body{background:white}.hero{padding-top:20px}.hero-grid,.demo,.report-intro{grid-template-columns:1fr}.idea-card,.output-shell{background:white;color:var(--ink);border:1px solid var(--line);box-shadow:none}.flow-step,.report-list span{color:var(--ink);border-color:var(--line)}.flow-step small,.output-heading p{color:var(--muted)}.only-print{display:block}.panel,.card,.metric{break-inside:avoid;box-shadow:none}section{padding:25px 0}}
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="wrap nav">
+      <div class="brand"><div class="mark" aria-hidden="true"><span><i></i><i></i><i></i></span></div><div>أثر<small>وحدة التطوير والجودة</small></div></div>
+      <div class="nav-actions"><button class="btn secondary" onclick="document.querySelector('#experience').scrollIntoView()">شاهد التجربة</button><button class="btn" onclick="window.print()">طباعة التصور</button></div>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="wrap hero-grid">
+        <div>
+          <div class="eyebrow">تصور مشروع رقمي مبسط</div>
+          <h1>كل إنجاز يُسجّل.<br>كل جهد يظهر له <em>أثر.</em></h1>
+          <p class="lead">منصة خفيفة توثّق ما ينجزه فريق وحدة التطوير والجودة يوميًا، ثم تحوّل السجلات المعتمدة إلى مؤشرات وتقارير شهرية وربع سنوية قابلة للقياس والعرض.</p>
+          <div class="hero-points"><span class="pill">PHP + MySQL</span><span class="pill">سريع على الجوال</span><span class="pill">صلاحيات واعتماد</span><span class="pill">تقارير قابلة للطباعة</span></div>
+        </div>
+        <aside class="idea-card" aria-label="رحلة الإنجاز">
+          <h2>رحلة الإنجاز في أربع خطوات</h2>
+          <div class="flow">
+            <div class="flow-step"><span class="num">1</span><div><strong>تسجيل سريع</strong><small>العمل، المستفيد، الإجراء، والحالة.</small></div></div>
+            <div class="flow-step"><span class="num">2</span><div><strong>مراجعة واعتماد</strong><small>المدير يراجع السجل قبل دخوله في التقرير.</small></div></div>
+            <div class="flow-step"><span class="num">3</span><div><strong>حساب تلقائي</strong><small>تجميع النتائج ومقارنتها بالمستهدفات.</small></div></div>
+            <div class="flow-step"><span class="num">4</span><div><strong>تقرير مؤسسي</strong><small>شهري، ربع سنوي، سنوي أو لفترة مخصصة.</small></div></div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section id="experience">
+      <div class="wrap">
+        <div class="section-head"><div><div class="eyebrow">تجربة توضيحية</div><h2>سجّل العمل مرة واحدة… ودع النظام يبني المؤشرات</h2></div><p>الموظف لا يكتب المؤشرات يدويًا؛ هو يوثّق العمل الذي أنجزه، والنظام يتولى التصنيف والحساب والتجميع بعد الاعتماد.</p></div>
+        <div class="demo">
+          <div class="panel form-panel">
+            <div class="panel-head"><h3>إضافة إنجاز جديد</h3><span class="tag">أقل من دقيقة</span></div>
+            <form class="form" id="demoForm">
+              <div class="field"><label for="title">عنوان الإنجاز</label><input id="title" value="تطوير نظام تكويد وإعارة للمكتبة" required></div>
+              <div class="two">
+                <div class="field"><label for="beneficiary">المستفيد</label><select id="beneficiary"><option>وحدة المكتبة</option><option>طالب</option><option>عضو هيئة تدريس</option><option>وحدة أو إدارة</option></select></div>
+                <div class="field"><label for="category">مجال العمل</label><select id="category"><option>حل تقني</option><option>تطوير وجودة</option><option>دعم طلابي</option><option>تحليل بيانات</option></select></div>
+              </div>
+              <div class="field"><label for="action">ما الذي تم؟</label><textarea id="action">تصميم نظام لتكويد مواقع الكتب وتسجيل عمليات الإعارة والاسترجاع.</textarea></div>
+              <div class="two">
+                <div class="field"><label for="status">الحالة</label><select id="status"><option value="100">مكتمل</option><option value="70">جارٍ العمل</option><option value="50">مكتمل جزئيًا</option></select></div>
+                <div class="field"><label for="importance">الأهمية</label><select id="importance"><option>استراتيجي</option><option>مهم</option><option>عادي</option></select></div>
+              </div>
+              <div class="field"><label for="progress">نسبة الإنجاز</label><div class="range-row"><input id="progress" type="range" min="0" max="100" value="100"><span class="range-value" id="rangeValue">100%</span></div></div>
+              <div class="success" id="success">تمت إضافة السجل إلى المعاينة وإرساله للاعتماد.</div>
+              <button class="btn save" type="submit">حفظ وإرسال للاعتماد</button>
+              <p class="note">هذه تجربة بصرية فقط؛ لا تُحفظ البيانات أو تُرسل إلى أي جهة.</p>
+            </form>
+          </div>
+          <div class="panel">
+            <div class="panel-head"><h3>معاينة لوحة المؤشرات</h3><span class="tag" id="periodLabel">سبتمبر 2026</span></div>
+            <div class="dash">
+              <div class="tabs"><button class="active" data-period="month">شهري</button><button data-period="quarter">ربع سنوي</button><button data-period="year">سنوي</button></div>
+              <div class="kpis">
+                <div class="kpi"><small>الأعمال المعتمدة</small><strong id="works">26</strong><div class="change">من مستهدف 20</div></div>
+                <div class="kpi"><small>نسبة الإكمال</small><strong id="complete">92%</strong><div class="change">↑ تحسن عن الفترة السابقة</div></div>
+                <div class="kpi"><small>عدد المستفيدين</small><strong id="beneficiaries">184</strong><div class="change">أفراد ووحدات</div></div>
+                <div class="kpi"><small>حلول تطويرية</small><strong id="solutions">7</strong><div class="change">منها 3 حلول استراتيجية</div></div>
+              </div>
+              <div class="progress-wrap"><div class="progress-top"><strong>تحقق مستهدف الأعمال</strong><b id="achievement">130%</b></div><div class="bar"><span id="achievementBar"></span></div></div>
+              <div class="chart" aria-label="توزيع الأعمال حسب المجال">
+                <div class="col"><i style="height:78%"></i>تقني</div><div class="col"><i style="height:54%"></i>جودة</div><div class="col"><i style="height:38%"></i>طلابي</div><div class="col"><i style="height:66%"></i>تقارير</div><div class="col"><i style="height:30%"></i>تدريب</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="principle"><b>!</b><p><strong>قاعدة القياس الأساسية:</strong> كثرة المهام لا تعني وحدها أثرًا أكبر. لذلك يفصل النظام بين عدد الأعمال، ونسبة إكمالها، والالتزام بالموعد، وعدد المستفيدين، وأهمية الإنجاز؛ حتى لا يساوي بين استفسار بسيط ومشروع تقني متكامل.</p></div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <div class="section-head"><div><div class="eyebrow">الحوكمة والصلاحيات</div><h2>بسيط للفريق، مضبوط للإدارة</h2></div><p>واجهة قليلة الخطوات مع صلاحيات واضحة تمنع تعديل السجلات المعتمدة وتحافظ على موثوقية التقرير.</p></div>
+        <div class="grid3">
+          <article class="card"><div class="icon">＋</div><h3>عضو الفريق</h3><p>يسجل أعماله، يحفظها كمسودة، ثم يرسلها للاعتماد ويتابع حالتها.</p></article>
+          <article class="card"><div class="icon">✓</div><h3>مدير الوحدة</h3><p>يراجع السجلات ويعتمدها أو يعيدها للتعديل ويحدد المستهدفات.</p></article>
+          <article class="card"><div class="icon">↻</div><h3>سجل العمليات</h3><p>يوثق الإضافة والتعديل والاعتماد والحذف المنطقي لضمان الشفافية.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <div class="section-head"><div><div class="eyebrow">مؤشرات النسخة الأولى</div><h2>ستة أرقام مفيدة بدل عشرات الأرقام المشتتة</h2></div><p>تبدأ المنصة بالمؤشرات التي يمكن حسابها بوضوح من سجل الأعمال، ثم تتوسع لاحقًا عند توافر بيانات أكثر نضجًا.</p></div>
+        <div class="metric-list">
+          <div class="metric"><span class="metric-number">1</span><div><strong>الأعمال المكتملة</strong><small>عدد السجلات المكتملة والمعتمدة</small></div></div>
+          <div class="metric"><span class="metric-number">2</span><div><strong>نسبة إغلاق الطلبات</strong><small>المكتمل ÷ إجمالي الطلبات</small></div></div>
+          <div class="metric"><span class="metric-number">3</span><div><strong>الإنجاز في الموعد</strong><small>الالتزام بتواريخ الاستحقاق</small></div></div>
+          <div class="metric"><span class="metric-number">4</span><div><strong>عدد المستفيدين</strong><small>الأفراد والوحدات المستفيدة</small></div></div>
+          <div class="metric"><span class="metric-number">5</span><div><strong>الحلول التطويرية</strong><small>الأنظمة والمبادرات والتحسينات</small></div></div>
+          <div class="metric"><span class="metric-number">6</span><div><strong>تقدم الأعمال المفتوحة</strong><small>متوسط نسب الإنجاز الحالية</small></div></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="final-output">
+      <div class="wrap output-shell">
+        <div class="output-heading">
+          <div><div class="eyebrow" style="color:#e7c98f">المخرج النهائي</div><h2>تقرير يُفهم من النظرة الأولى</h2><p>يختار المدير الشهر أو الربع أو فترة مخصصة، فيخرج تقرير متكامل جاهزًا للطباعة والحفظ PDF، مع إمكانية تصدير التفاصيل إلى Excel.</p></div>
+          <div class="output-tabs" role="tablist" aria-label="تصور المخرج النهائي"><button class="active" type="button" data-output="overview" role="tab">فكرة المخرج</button><button type="button" data-output="preview" role="tab">نموذج التقرير</button></div>
+        </div>
+        <div class="output-pane active" id="output-overview" role="tabpanel">
+          <div class="report-intro">
+            <div class="report-list"><span>ملخص تنفيذي</span><span>الفعلي مقابل المستهدف</span><span>أبرز الإنجازات</span><span>الأعمال المتأخرة</span><span>مساهمة الفريق</span><span>رسوم وتوزيعات</span></div>
+            <div class="mock-report" aria-label="نموذج مصغر للتقرير"><strong>تقرير الأداء الربع سنوي</strong><small style="display:block;color:var(--muted)">يوليو – سبتمبر 2026</small><div class="mini-kpis"><i></i><i></i><i></i></div><div class="line gold"></div><div class="line"></div><div class="line" style="width:82%"></div><div class="line" style="width:91%"></div></div>
+          </div>
+        </div>
+        <div class="output-pane" id="output-preview" role="tabpanel">
+          <div class="report-workspace">
+            <div class="report-toolbar">
+              <div><label for="reportPeriod">نوع الفترة</label><select id="reportPeriod"><option value="month">شهر محدد</option><option value="quarter" selected>ربع سنوي</option><option value="custom">فترة مخصصة</option></select></div>
+              <div class="date-fields"><div><label for="dateFrom">من</label><input id="dateFrom" type="date" value="2026-07-01"></div><div><label for="dateTo">إلى</label><input id="dateTo" type="date" value="2026-09-30"></div></div>
+              <div class="report-actions"><button class="btn secondary" type="button" id="refreshReport">تحديث المعاينة</button><button class="btn" type="button" onclick="printFinalReport()">طباعة / PDF</button><button class="btn secondary" type="button" onclick="exportReportCsv()">تصدير Excel</button></div>
+            </div>
+            <article class="final-report" id="printableReport">
+              <header class="report-brand"><div><h3>كلية الشمال للتمريض الأهلية</h3><p>وحدة التطوير والجودة</p></div><div class="report-stamp"><strong>تقرير الأداء الربع سنوي</strong><small id="reportDateLabel">01 يوليو – 30 سبتمبر 2026</small></div></header>
+              <div class="report-kpis"><div class="report-kpi"><small>الأعمال المعتمدة</small><strong>71</strong></div><div class="report-kpi"><small>نسبة الإكمال</small><strong>89%</strong></div><div class="report-kpi"><small>المستفيدون</small><strong>492</strong></div><div class="report-kpi"><small>تحقق المستهدف</small><strong>118%</strong></div></div>
+              <div class="executive"><strong>الملخص التنفيذي:</strong> أنجزت الوحدة 71 عملًا معتمدًا خلال الفترة، وتجاوزت المستهدف الربع سنوي بنسبة 18%، مع ارتفاع واضح في الحلول التقنية ودعم الوحدات الأكاديمية.</div>
+              <div class="report-columns">
+                <div class="report-block"><h4>توزيع الأعمال حسب المجال</h4><div class="report-bars"><div class="report-bar"><span>حلول تقنية</span><i style="--w:88%"></i><b>24</b></div><div class="report-bar"><span>تطوير وجودة</span><i style="--w:70%"></i><b>19</b></div><div class="report-bar"><span>دعم طلابي</span><i style="--w:46%"></i><b>12</b></div><div class="report-bar"><span>تقارير وتحليل</span><i style="--w:59%"></i><b>16</b></div></div></div>
+                <div class="report-block"><h4>حالة الأعمال</h4><div class="report-bars"><div class="report-bar"><span>مكتمل</span><i style="--w:89%"></i><b>63</b></div><div class="report-bar"><span>جارٍ</span><i style="--w:10%"></i><b>7</b></div><div class="report-bar"><span>متأخر</span><i style="--w:3%"></i><b>1</b></div></div></div>
+              </div>
+              <table class="report-table"><thead><tr><th>الإنجاز</th><th>المستفيد</th><th>المجال</th><th>المسؤول</th><th>الحالة</th><th>الإنجاز</th></tr></thead><tbody><tr><td>نظام تكويد وإعارة المكتبة</td><td>وحدة المكتبة</td><td>حل تقني</td><td>فريق الوحدة</td><td><span class="state">مكتمل</span></td><td>100%</td></tr><tr><td>تحليل مشكلات الطلاب الأكاديمية</td><td>الطلاب</td><td>دعم طلابي</td><td>عضو الفريق</td><td><span class="state">مكتمل</span></td><td>100%</td></tr><tr><td>تطوير نموذج متابعة المؤشرات</td><td>وحدة الجودة</td><td>تطوير وجودة</td><td>مدير الوحدة</td><td><span class="state wait">جارٍ</span></td><td>75%</td></tr></tbody></table>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer"><div class="wrap footer-inner"><span>تصور أولي لمشروع «أثر»</span><span>كلية الشمال للتمريض الأهلية — وحدة التطوير والجودة</span></div></footer>
+
+  <script>
+    const progress=document.getElementById('progress'),rangeValue=document.getElementById('rangeValue'),status=document.getElementById('status');
+    progress.addEventListener('input',()=>rangeValue.textContent=progress.value+'%');
+    status.addEventListener('change',()=>{progress.value=status.value;rangeValue.textContent=status.value+'%'});
+    document.getElementById('demoForm').addEventListener('submit',e=>{e.preventDefault();const s=document.getElementById('success');s.classList.add('show');const w=document.getElementById('works');w.textContent=Number(w.textContent)+1;setTimeout(()=>s.classList.remove('show'),3200)});
+    const data={month:{label:'سبتمبر 2026',works:26,complete:'92%',beneficiaries:184,solutions:7,achievement:'130%',bar:'100%',heights:[78,54,38,66,30]},quarter:{label:'الربع الثالث 2026',works:71,complete:'89%',beneficiaries:492,solutions:18,achievement:'118%',bar:'100%',heights:[88,70,50,73,42]},year:{label:'عام 2026',works:214,complete:'86%',beneficiaries:1380,solutions:43,achievement:'107%',bar:'100%',heights:[92,80,62,76,58]}};
+    document.querySelectorAll('.dash .tabs button').forEach(btn=>btn.addEventListener('click',()=>{document.querySelectorAll('.dash .tabs button').forEach(b=>b.classList.remove('active'));btn.classList.add('active');const d=data[btn.dataset.period];document.getElementById('periodLabel').textContent=d.label;document.getElementById('works').textContent=d.works;document.getElementById('complete').textContent=d.complete;document.getElementById('beneficiaries').textContent=d.beneficiaries;document.getElementById('solutions').textContent=d.solutions;document.getElementById('achievement').textContent=d.achievement;document.getElementById('achievementBar').style.width=d.bar;document.querySelectorAll('.chart i').forEach((el,i)=>el.style.height=d.heights[i]+'%')}));
+    document.querySelectorAll('.output-tabs button').forEach(btn=>btn.addEventListener('click',()=>{document.querySelectorAll('.output-tabs button').forEach(b=>b.classList.remove('active'));document.querySelectorAll('.output-pane').forEach(p=>p.classList.remove('active'));btn.classList.add('active');document.getElementById('output-'+btn.dataset.output).classList.add('active')}));
+    const reportPeriod=document.getElementById('reportPeriod'),dateFrom=document.getElementById('dateFrom'),dateTo=document.getElementById('dateTo'),reportDateLabel=document.getElementById('reportDateLabel');
+    const formatArabicDate=value=>new Intl.DateTimeFormat('ar-SA-u-ca-gregory',{day:'2-digit',month:'long',year:'numeric'}).format(new Date(value+'T12:00:00'));
+    function refreshReport(){const labels={month:'تقرير الأداء الشهري',quarter:'تقرير الأداء الربع سنوي',custom:'تقرير أداء لفترة مخصصة'};document.querySelector('.report-stamp strong').textContent=labels[reportPeriod.value];reportDateLabel.textContent=formatArabicDate(dateFrom.value)+' – '+formatArabicDate(dateTo.value)}
+    document.getElementById('refreshReport').addEventListener('click',refreshReport);
+    function printFinalReport(){document.body.classList.add('print-final');window.print();setTimeout(()=>document.body.classList.remove('print-final'),400)}
+    function exportReportCsv(){const rows=[['الإنجاز','المستفيد','المجال','المسؤول','الحالة','نسبة الإنجاز'],['نظام تكويد وإعارة المكتبة','وحدة المكتبة','حل تقني','فريق الوحدة','مكتمل','100%'],['تحليل مشكلات الطلاب الأكاديمية','الطلاب','دعم طلابي','عضو الفريق','مكتمل','100%'],['تطوير نموذج متابعة المؤشرات','وحدة الجودة','تطوير وجودة','مدير الوحدة','جارٍ','75%']];const csv='\uFEFF'+rows.map(r=>r.map(v=>'"'+v.replaceAll('"','""')+'"').join(',')).join('\r\n');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));a.download='تقرير-أثر.csv';a.click();URL.revokeObjectURL(a.href)}
+  </script>
+</body>
+</html>
