@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#008069">
-<title>مكتبة الأوامر — 99 أمر</title>
+<title>مكتبة الأوامر — 100 أمر</title>
 <style>
 :root{
   --header:#008069; --chat-bg:#efeae2;
@@ -38,7 +38,6 @@ body{
   max-width:860px; margin:0 auto; position:relative; overflow:hidden;
   box-shadow:0 0 40px rgba(0,0,0,.18);
 }
-/* ===== الهيدر ===== */
 .topbar{
   background:var(--header); color:#fff; flex-shrink:0; z-index:6;
   padding:10px 14px 0; transition:background .25s;
@@ -59,7 +58,6 @@ body{
   justify-content:center;transition:background .2s;
 }
 .iconbtn:hover{background:rgba(255,255,255,.14)}
-/* ===== البحث ===== */
 .searchwrap{padding:10px 0 8px}
 .searchbox{position:relative;display:flex;align-items:center}
 .searchbox .mag{position:absolute;inset-inline-start:12px;font-size:15px;opacity:.55;color:var(--search-text);pointer-events:none}
@@ -74,7 +72,6 @@ body{
   position:absolute;inset-inline-end:8px;border:0;background:transparent;
   color:var(--sub);font-size:16px;cursor:pointer;padding:4px 8px;border-radius:50%;
 }
-/* ===== شرائح التصنيفات ===== */
 .chips{
   display:flex;gap:7px;overflow-x:auto;padding:0 0 10px;
   scrollbar-width:none;
@@ -87,7 +84,6 @@ body{
 }
 .chip:hover{background:rgba(255,255,255,.32)}
 .chip.active{background:var(--chip-active);color:var(--chip-active-text);font-weight:700}
-/* ===== منطقة الدردشة ===== */
 .chat{
   flex:1;overflow-y:auto;overflow-x:hidden;padding:14px 12px 20px;
   background-color:var(--chat-bg);
@@ -105,7 +101,6 @@ body.dark .chat{
 }
 .chat::-webkit-scrollbar{width:6px}
 .chat::-webkit-scrollbar-thumb{background:rgba(128,128,128,.35);border-radius:3px}
-/* ===== فقاعات ===== */
 .syspill{
   text-align:center;margin:0 auto 14px;max-width:92%;
   background:var(--in-bubble);color:var(--sub);font-size:12.3px;
@@ -159,7 +154,6 @@ body.dark .chat{
   text-align:center;color:var(--sub);font-size:14px;margin-top:40px;line-height:1.9;
 }
 .empty span{font-size:34px;display:block;margin-bottom:8px}
-/* ===== شريط الكتابة ===== */
 .composer{
   flex-shrink:0;display:flex;align-items:center;gap:8px;
   padding:8px 10px;background:var(--panel);
@@ -180,7 +174,6 @@ body.dark .chat{
 .sendbtn:hover{filter:brightness(1.12)}
 .sendbtn:active{transform:scale(.94)}
 body.dark .sendbtn{background:#00a884;color:#0b141a}
-/* ===== تنبيه ===== */
 .toast{
   position:fixed;bottom:84px;left:50%;transform:translate(-50%,20px);
   background:rgba(17,27,33,.92);color:#fff;font-size:13.5px;
@@ -203,7 +196,7 @@ body.dark .sendbtn{background:#00a884;color:#0b141a}
       <div class="avatar">⚡</div>
       <div class="hinfo">
         <div class="hname">مكتبة الأوامر</div>
-        <div class="hstatus" id="status">99 أمر جاهز للنسخ</div>
+        <div class="hstatus" id="status">100 أمر جاهز للنسخ</div>
       </div>
       <button class="iconbtn" id="themeBtn" title="الوضع الليلي">🌙</button>
     </div>
@@ -330,7 +323,8 @@ const DATA = [
  {n:96, c:'/json',           d:'تنسيق الإجابة بصيغة JSON',                   g:'تخطيط وإنتاجية'},
  {n:97, c:'/roleplay',       d:'محاكاة سيناريو واقعي',                       g:'تخطيط وإنتاجية'},
  {n:98, c:'/reverse',        d:'العمل بالعكس من النتيجة المطلوبة',           g:'تخطيط وإنتاجية'},
- {n:99, c:'/ultimate',       d:'تقديم أقوى إجابة كاملة',                     g:'تخطيط وإنتاجية'}
+ {n:99, c:'/ultimate',       d:'تقديم أقوى إجابة كاملة',                     g:'تخطيط وإنتاجية'},
+ {n:100,c:'/infographic',    d:'تحويل المعلومات إلى تصميم إنفوجراف بصري',    g:'محتوى وتسويق'}
 ];
 
 const CATS = ['الكل','⭐ المفضلة','كتابة وصياغة','تفكير وتحليل','محتوى وتسويق','أعمال واستراتيجية','تخطيط وإنتاجية','تعلّم وتعليم'];
