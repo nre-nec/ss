@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#008069">
+<title>مكتبة الأوامر — 99 أمر</title>
+<style>
+:root{
+  --header:#008069; --chat-bg:#efeae2;
+  --in-bubble:#ffffff; --out-bubble:#d9fdd3;
+  --text:#111b21; --sub:#667781;
+  --panel:#f0f2f5; --input-bg:#ffffff;
+  --search-bg:#ffffff; --search-text:#111b21;
+  --chip-bg:rgba(255,255,255,.20); --chip-active:#ffffff; --chip-active-text:#008069;
+  --cmd:#008069; --shadow:0 1px .5px rgba(11,20,26,.13);
+  --star:#b8c2c7; --star-on:#f5b301; --line:rgba(0,0,0,.06);
+}
+body.dark{
+  --header:#202c33; --chat-bg:#0b141a;
+  --in-bubble:#202c33; --out-bubble:#005c4b;
+  --text:#e9edef; --sub:#8696a0;
+  --panel:#202c33; --input-bg:#2a3942;
+  --search-bg:#2a3942; --search-text:#e9edef;
+  --chip-bg:rgba(255,255,255,.12); --chip-active:#00a884; --chip-active-text:#0b141a;
+  --cmd:#00a884; --shadow:0 1px .5px rgba(0,0,0,.45);
+  --star:#8696a0; --star-on:#f5b301; --line:rgba(255,255,255,.07);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0;height:100%}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Tahoma,"Noto Kufi Arabic",Arial,sans-serif;
+  background:var(--chat-bg); color:var(--text);
+  overscroll-behavior:none; transition:background .25s,color .25s;
+}
+.app{
+  display:flex; flex-direction:column; height:100vh; height:100dvh;
+  max-width:860px; margin:0 auto; position:relative; overflow:hidden;
+  box-shadow:0 0 40px rgba(0,0,0,.18);
+}
+/* ===== الهيدر ===== */
+.topbar{
+  background:var(--header); color:#fff; flex-shrink:0; z-index:6;
+  padding:10px 14px 0; transition:background .25s;
+}
+.toprow{display:flex;align-items:center;gap:12px}
+.avatar{
+  width:42px;height:42px;border-radius:50%;flex-shrink:0;
+  background:linear-gradient(135deg,#25d366,#128c7e);
+  display:flex;align-items:center;justify-content:center;font-size:21px;
+  box-shadow:0 2px 6px rgba(0,0,0,.2);
+}
+.hinfo{flex:1;min-width:0}
+.hname{font-size:16.5px;font-weight:600;line-height:1.25}
+.hstatus{font-size:12.5px;opacity:.85;margin-top:1px}
+.iconbtn{
+  background:transparent;border:0;color:#fff;font-size:20px;cursor:pointer;
+  width:38px;height:38px;border-radius:50%;display:flex;align-items:center;
+  justify-content:center;transition:background .2s;
+}
+.iconbtn:hover{background:rgba(255,255,255,.14)}
+/* ===== البحث ===== */
+.searchwrap{padding:10px 0 8px}
+.searchbox{position:relative;display:flex;align-items:center}
+.searchbox .mag{position:absolute;inset-inline-start:12px;font-size:15px;opacity:.55;color:var(--search-text);pointer-events:none}
+#search{
+  width:100%;border:0;outline:none;border-radius:10px;
+  background:var(--search-bg);color:var(--search-text);
+  padding:9px 38px 9px 38px;font-size:14.5px;font-family:inherit;
+  transition:background .25s,color .25s;
+}
+#search::placeholder{color:var(--sub);opacity:.85}
+.clearbtn{
+  position:absolute;inset-inline-end:8px;border:0;background:transparent;
+  color:var(--sub);font-size:16px;cursor:pointer;padding:4px 8px;border-radius:50%;
+}
+/* ===== شرائح التصنيفات ===== */
+.chips{
+  display:flex;gap:7px;overflow-x:auto;padding:0 0 10px;
+  scrollbar-width:none;
+}
+.chips::-webkit-scrollbar{display:none}
+.chip{
+  flex:0 0 auto;border:0;cursor:pointer;font-family:inherit;font-size:13px;
+  padding:6px 13px;border-radius:16px;background:var(--chip-bg);color:#fff;
+  white-space:nowrap;transition:.2s;font-weight:500;
+}
+.chip:hover{background:rgba(255,255,255,.32)}
+.chip.active{background:var(--chip-active);color:var(--chip-active-text);font-weight:700}
+/* ===== منطقة الدردشة ===== */
+.chat{
+  flex:1;overflow-y:auto;overflow-x:hidden;padding:14px 12px 20px;
+  background-color:var(--chat-bg);
+  background-image:
+    radial-gradient(circle, rgba(0,0,0,.035) 1.5px, transparent 1.7px),
+    radial-gradient(circle, rgba(0,0,0,.022) 1.5px, transparent 1.7px);
+  background-size:52px 52px, 76px 76px;
+  background-position:0 0, 26px 26px;
+  scroll-behavior:smooth;
+}
+body.dark .chat{
+  background-image:
+    radial-gradient(circle, rgba(255,255,255,.035) 1.5px, transparent 1.7px),
+    radial-gradient(circle, rgba(255,255,255,.02) 1.5px, transparent 1.7px);
+}
+.chat::-webkit-scrollbar{width:6px}
+.chat::-webkit-scrollbar-thumb{background:rgba(128,128,128,.35);border-radius:3px}
+/* ===== فقاعات ===== */
+.syspill{
+  text-align:center;margin:0 auto 14px;max-width:92%;
+  background:var(--in-bubble);color:var(--sub);font-size:12.3px;
+  padding:7px 12px;border-radius:9px;box-shadow:var(--shadow);line-height:1.6;
+}
+.msg{display:flex;margin-bottom:7px;animation:pop .22s ease}
+@keyframes pop{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.msg.in{justify-content:flex-start}
+.msg.out{justify-content:flex-end}
+.bubble{
+  max-width:90%;border-radius:12px;padding:9px 12px;position:relative;
+  box-shadow:var(--shadow);cursor:pointer;transition:transform .12s,filter .15s;
+  display:flex;gap:9px;align-items:flex-start;
+}
+.bubble:active{transform:scale(.985)}
+.in .bubble{background:var(--in-bubble);border-top-right-radius:4px}
+.out .bubble{background:var(--out-bubble);border-top-left-radius:4px;cursor:default;display:block}
+.bubble.sent{animation:flash .5s ease}
+@keyframes flash{0%{filter:brightness(1.25)}100%{filter:none}}
+.body{flex:1;min-width:0}
+.cmd{
+  font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  font-size:15.5px;font-weight:700;color:var(--cmd);direction:ltr;
+  text-align:right;letter-spacing:.2px;word-break:break-all;
+}
+.desc{font-size:14px;line-height:1.55;margin-top:3px;color:var(--text)}
+.meta{
+  display:flex;align-items:center;gap:6px;margin-top:6px;
+  font-size:11.5px;color:var(--sub);
+}
+.num{
+  background:rgba(128,128,128,.14);border-radius:6px;padding:1px 6px;
+  font-weight:700;direction:ltr;
+}
+.star{
+  border:0;background:transparent;cursor:pointer;font-size:19px;line-height:1;
+  color:var(--star);padding:0 2px;margin-top:-2px;transition:.18s;flex-shrink:0;
+}
+.star:hover{transform:scale(1.18)}
+.star.on{color:var(--star-on)}
+.out .txt{
+  font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  font-size:15px;direction:ltr;text-align:left;word-break:break-all;
+}
+.out .time{
+  font-size:10.5px;color:var(--sub);text-align:left;margin-top:4px;
+  display:flex;gap:3px;justify-content:flex-start;align-items:center;direction:ltr;
+}
+.ticks{color:#53bdeb;font-size:11px}
+.empty{
+  text-align:center;color:var(--sub);font-size:14px;margin-top:40px;line-height:1.9;
+}
+.empty span{font-size:34px;display:block;margin-bottom:8px}
+/* ===== شريط الكتابة ===== */
+.composer{
+  flex-shrink:0;display:flex;align-items:center;gap:8px;
+  padding:8px 10px;background:var(--panel);
+  padding-bottom:calc(8px + env(safe-area-inset-bottom));
+  transition:background .25s;
+}
+#msg{
+  flex:1;border:0;outline:none;border-radius:22px;font-family:inherit;
+  background:var(--input-bg);color:var(--text);
+  padding:11px 16px;font-size:15px;transition:background .25s;
+}
+#msg::placeholder{color:var(--sub)}
+.sendbtn{
+  width:46px;height:46px;flex-shrink:0;border:0;border-radius:50%;cursor:pointer;
+  background:#008069;color:#fff;font-size:19px;display:flex;
+  align-items:center;justify-content:center;transition:.2s;
+}
+.sendbtn:hover{filter:brightness(1.12)}
+.sendbtn:active{transform:scale(.94)}
+body.dark .sendbtn{background:#00a884;color:#0b141a}
+/* ===== تنبيه ===== */
+.toast{
+  position:fixed;bottom:84px;left:50%;transform:translate(-50%,20px);
+  background:rgba(17,27,33,.92);color:#fff;font-size:13.5px;
+  padding:9px 20px;border-radius:22px;opacity:0;pointer-events:none;
+  transition:.28s;z-index:99;white-space:nowrap;
+}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+@media (max-width:420px){
+  .cmd{font-size:14.5px}
+  .desc{font-size:13.3px}
+  .bubble{max-width:94%}
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <div class="topbar">
+    <div class="toprow">
+      <div class="avatar">⚡</div>
+      <div class="hinfo">
+        <div class="hname">مكتبة الأوامر</div>
+        <div class="hstatus" id="status">99 أمر جاهز للنسخ</div>
+      </div>
+      <button class="iconbtn" id="themeBtn" title="الوضع الليلي">🌙</button>
+    </div>
+
+    <div class="searchwrap">
+      <div class="searchbox">
+        <span class="mag">🔍</span>
+        <input id="search" type="text" placeholder="ابحث… مثال: seo أو كتابة أو 47" autocomplete="off">
+        <button class="clearbtn" id="clearBtn" style="display:none">✕</button>
+      </div>
+    </div>
+
+    <div class="chips" id="chips"></div>
+  </div>
+
+  <main class="chat" id="chat"></main>
+
+  <footer class="composer">
+    <input id="msg" type="text" placeholder="اكتب /أمر أو رسالة…" autocomplete="off">
+    <button class="sendbtn" id="sendBtn" title="إرسال">➤</button>
+  </footer>
+</div>
+
+<div class="toast" id="toast">تم النسخ ✓</div>
+
+<script>
+/* ================== البيانات ================== */
+const DATA = [
+ {n:1,  c:'/human',          d:'كتابة طبيعية بأسلوب بشري',                    g:'كتابة وصياغة'},
+ {n:2,  c:'/expert',         d:'إجابات بمستوى متخصص',                        g:'تفكير وتحليل'},
+ {n:3,  c:'/ceo',            d:'تحليل بعقلية مؤسس أو مدير تنفيذي',           g:'تفكير وتحليل'},
+ {n:4,  c:'/viral',          d:'أفكار محتوى عالية التفاعل',                  g:'محتوى وتسويق'},
+ {n:5,  c:'/seo',            d:'محتوى مُحسّن لمحركات البحث',                 g:'محتوى وتسويق'},
+ {n:6,  c:'/critic',         d:'اكتشاف نقاط الضعف والأخطاء',                 g:'تفكير وتحليل'},
+ {n:7,  c:'/teacher',        d:'شرح واضح وبسيط',                             g:'تعلّم وتعليم'},
+ {n:8,  c:'/eli5',           d:'اشرح لي وكأنني في الخامسة',                  g:'تعلّم وتعليم'},
+ {n:9,  c:'/brief',          d:'أقصر إجابة ممكنة',                           g:'كتابة وصياغة'},
+ {n:10, c:'/strategy',       d:'تخطيط واستراتيجية طويلة المدى',              g:'أعمال واستراتيجية'},
+ {n:11, c:'/copywriter',     d:'كتابة تسويقية مقنعة',                        g:'كتابة وصياغة'},
+ {n:12, c:'/research',       d:'إجراء بحث متعمق',                            g:'تعلّم وتعليم'},
+ {n:13, c:'/brainstorm',     d:'توليد أفكار إبداعية',                        g:'تفكير وتحليل'},
+ {n:14, c:'/promptengineer', d:'تحسين أي برومبت',                            g:'تفكير وتحليل'},
+ {n:15, c:'/summarize',      d:'تلخيص النقاط الرئيسية',                      g:'كتابة وصياغة'},
+ {n:16, c:'/simplify',       d:'تبسيط المحتوى المعقد',                       g:'كتابة وصياغة'},
+ {n:17, c:'/detailed',       d:'تقديم شرح شامل ومفصل',                       g:'تعلّم وتعليم'},
+ {n:18, c:'/stepbystep',     d:'الشرح خطوة بخطوة',                           g:'تعلّم وتعليم'},
+ {n:19, c:'/examples',       d:'تقديم أمثلة عملية',                          g:'تعلّم وتعليم'},
+ {n:20, c:'/analyst',        d:'تحليل البيانات أو المعلومات',                g:'تفكير وتحليل'},
+ {n:21, c:'/compare',        d:'مقارنة عدة خيارات',                          g:'تفكير وتحليل'},
+ {n:22, c:'/proscons',       d:'إظهار المزايا والعيوب',                      g:'تفكير وتحليل'},
+ {n:23, c:'/decision',       d:'المساعدة في اتخاذ أفضل قرار',                g:'تخطيط وإنتاجية'},
+ {n:24, c:'/planner',        d:'بناء خطة قابلة للتنفيذ',                     g:'تخطيط وإنتاجية'},
+ {n:25, c:'/roadmap',        d:'إنشاء خارطة طريق لهدف ما',                   g:'أعمال واستراتيجية'},
+ {n:26, c:'/action',         d:'تحويل الأفكار إلى خطوات عملية',              g:'تخطيط وإنتاجية'},
+ {n:27, c:'/prioritize',     d:'ترتيب المهام حسب الأهمية',                   g:'تخطيط وإنتاجية'},
+ {n:28, c:'/productivity',   d:'تحسين الإنتاجية',                            g:'تخطيط وإنتاجية'},
+ {n:29, c:'/focus',          d:'تحديد أهم مهمة',                             g:'تخطيط وإنتاجية'},
+ {n:30, c:'/time',           d:'إنشاء خطة لإدارة الوقت',                     g:'تخطيط وإنتاجية'},
+ {n:31, c:'/learn',          d:'بناء خطة للتعلم',                            g:'تعلّم وتعليم'},
+ {n:32, c:'/study',          d:'إنشاء استراتيجية دراسة فعّالة',              g:'تعلّم وتعليم'},
+ {n:33, c:'/quiz',           d:'اختبار المعرفة من خلال أسئلة',               g:'تعلّم وتعليم'},
+ {n:34, c:'/flashcards',     d:'إنشاء بطاقات دراسية',                        g:'تعلّم وتعليم'},
+ {n:35, c:'/interview',      d:'التحضير للمقابلات',                          g:'أعمال واستراتيجية'},
+ {n:36, c:'/resume',         d:'تحسين محتوى السيرة الذاتية',                 g:'أعمال واستراتيجية'},
+ {n:37, c:'/career',         d:'تقديم إرشادات مهنية',                        g:'أعمال واستراتيجية'},
+ {n:38, c:'/mentor',         d:'الرد بأسلوب مرشد شخصي',                      g:'أعمال واستراتيجية'},
+ {n:39, c:'/coach',          d:'تقديم تدريب عملي',                           g:'أعمال واستراتيجية'},
+ {n:40, c:'/consultant',     d:'تقديم توصيات احترافية',                      g:'أعمال واستراتيجية'},
+ {n:41, c:'/editor',         d:'تحسين الوضوح والجودة',                       g:'كتابة وصياغة'},
+ {n:42, c:'/proofread',      d:'العثور على الأخطاء النحوية والإملائية',      g:'كتابة وصياغة'},
+ {n:43, c:'/rewrite',        d:'إعادة الصياغة بكلمات أفضل',                  g:'كتابة وصياغة'},
+ {n:44, c:'/professional',   d:'جعل الكتابة أكثر احترافية',                  g:'كتابة وصياغة'},
+ {n:45, c:'/casual',         d:'جعل الكتابة بأسلوب محادثة طبيعي',            g:'كتابة وصياغة'},
+ {n:46, c:'/friendly',       d:'جعل الكتابة دافئة وودية',                    g:'كتابة وصياغة'},
+ {n:47, c:'/persuasive',     d:'جعل الرسالة أكثر إقناعاً',                   g:'كتابة وصياغة'},
+ {n:48, c:'/concise',        d:'إزالة الكلمات غير الضرورية',                 g:'كتابة وصياغة'},
+ {n:49, c:'/polish',         d:'تحسين النسخة النهائية',                      g:'كتابة وصياغة'},
+ {n:50, c:'/tone',           d:'تعديل نبرة الكتابة',                         g:'كتابة وصياغة'},
+ {n:51, c:'/storyteller',    d:'تحويل المعلومات إلى قصة',                    g:'محتوى وتسويق'},
+ {n:52, c:'/hook',           d:'إنشاء مقدمات جذابة تلفت الانتباه',           g:'محتوى وتسويق'},
+ {n:53, c:'/headline',       d:'إنشاء عناوين قوية',                          g:'محتوى وتسويق'},
+ {n:54, c:'/caption',        d:'كتابة تعليقات لمنصات التواصل الاجتماعي',     g:'محتوى وتسويق'},
+ {n:55, c:'/linkedin',       d:'إنشاء محتوى احترافي لـ LinkedIn',            g:'محتوى وتسويق'},
+ {n:56, c:'/instagram',      d:'إنشاء محتوى لـ Instagram',                   g:'محتوى وتسويق'},
+ {n:57, c:'/youtube',        d:'إنشاء محتوى لـ YouTube',                     g:'محتوى وتسويق'},
+ {n:58, c:'/reels',          d:'توليد أفكار فيديوهات قصيرة',                 g:'محتوى وتسويق'},
+ {n:59, c:'/script',         d:'كتابة نص لفيديو أو عرض تقديمي',              g:'محتوى وتسويق'},
+ {n:60, c:'/email',          d:'كتابة بريد إلكتروني فعّال',                  g:'محتوى وتسويق'},
+ {n:61, c:'/sales',          d:'إنشاء رسائل تركز على المبيعات',              g:'محتوى وتسويق'},
+ {n:62, c:'/offer',          d:'صياغة عرض لا يُقاوم',                        g:'محتوى وتسويق'},
+ {n:63, c:'/brand',          d:'تطوير رسالة العلامة التجارية',               g:'محتوى وتسويق'},
+ {n:64, c:'/customer',       d:'التفكير من منظور العميل',                    g:'محتوى وتسويق'},
+ {n:65, c:'/audience',       d:'تحليل الجمهور المستهدف',                     g:'محتوى وتسويق'},
+ {n:66, c:'/competitor',     d:'تحليل المنافسين',                            g:'محتوى وتسويق'},
+ {n:67, c:'/market',         d:'تحليل فرص السوق',                            g:'أعمال واستراتيجية'},
+ {n:68, c:'/startup',        d:'التفكير كاستراتيجي لشركة ناشئة',             g:'أعمال واستراتيجية'},
+ {n:69, c:'/business',       d:'تطوير أفكار تجارية',                         g:'أعمال واستراتيجية'},
+ {n:70, c:'/pricing',        d:'وضع استراتيجية تسعير',                       g:'أعمال واستراتيجية'},
+ {n:71, c:'/funnel',         d:'بناء مسار تسويقي',                           g:'محتوى وتسويق'},
+ {n:72, c:'/growth',         d:'العثور على فرص للنمو',                       g:'أعمال واستراتيجية'},
+ {n:73, c:'/content',        d:'بناء استراتيجية محتوى',                      g:'محتوى وتسويق'},
+ {n:74, c:'/calendar',       d:'إنشاء تقويم محتوى',                          g:'محتوى وتسويق'},
+ {n:75, c:'/ideas',          d:'توليد أفكار جديدة',                          g:'محتوى وتسويق'},
+ {n:76, c:'/creative',       d:'التفكير بإبداع وبشكل مختلف',                 g:'تفكير وتحليل'},
+ {n:77, c:'/unpopular',      d:'تحدي طرق التفكير التقليدية',                 g:'تفكير وتحليل'},
+ {n:78, c:'/devilsadvocate', d:'الجدال من منظور الطرف الآخر',                g:'تفكير وتحليل'},
+ {n:79, c:'/contrarian',     d:'إيجاد وجهات نظر بديلة',                      g:'تفكير وتحليل'},
+ {n:80, c:'/assumptions',    d:'تحديد الافتراضات المخفية',                   g:'تفكير وتحليل'},
+ {n:81, c:'/risks',          d:'تحديد المخاطر المحتملة',                     g:'تفكير وتحليل'},
+ {n:82, c:'/factcheck',      d:'الفصل بين الحقائق والادعاءات',               g:'تفكير وتحليل'},
+ {n:83, c:'/verify',         d:'تحديد ما يحتاج إلى التحقق',                  g:'تفكير وتحليل'},
+ {n:84, c:'/logic',          d:'مراجعة المنطق والاستدلال',                   g:'تفكير وتحليل'},
+ {n:85, c:'/rootcause',      d:'إيجاد السبب الجذري للمشكلة',                 g:'تفكير وتحليل'},
+ {n:86, c:'/debug',          d:'العثور على المشكلات وحلها',                  g:'تفكير وتحليل'},
+ {n:87, c:'/solution',       d:'توليد حلول عملية',                           g:'تفكير وتحليل'},
+ {n:88, c:'/alternative',    d:'اقتراح بدائل أفضل',                          g:'تفكير وتحليل'},
+ {n:89, c:'/optimize',       d:'تحسين نهج موجود بالفعل',                     g:'تخطيط وإنتاجية'},
+ {n:90, c:'/automate',       d:'إيجاد طرق لأتمتة المهام',                    g:'تخطيط وإنتاجية'},
+ {n:91, c:'/template',       d:'إنشاء قالب قابل لإعادة الاستخدام',           g:'تخطيط وإنتاجية'},
+ {n:92, c:'/checklist',      d:'إنشاء قائمة مهام عملية',                     g:'تخطيط وإنتاجية'},
+ {n:93, c:'/framework',      d:'بناء إطار عمل منظم',                         g:'تخطيط وإنتاجية'},
+ {n:94, c:'/matrix',         d:'تنظيم الخيارات في مصفوفة قرار',              g:'تخطيط وإنتاجية'},
+ {n:95, c:'/table',          d:'تحويل المعلومات إلى جدول',                   g:'تخطيط وإنتاجية'},
+ {n:96, c:'/json',           d:'تنسيق الإجابة بصيغة JSON',                   g:'تخطيط وإنتاجية'},
+ {n:97, c:'/roleplay',       d:'محاكاة سيناريو واقعي',                       g:'تخطيط وإنتاجية'},
+ {n:98, c:'/reverse',        d:'العمل بالعكس من النتيجة المطلوبة',           g:'تخطيط وإنتاجية'},
+ {n:99, c:'/ultimate',       d:'تقديم أقوى إجابة كاملة',                     g:'تخطيط وإنتاجية'}
+];
+
+const CATS = ['الكل','⭐ المفضلة','كتابة وصياغة','تفكير وتحليل','محتوى وتسويق','أعمال واستراتيجية','تخطيط وإنتاجية','تعلّم وتعليم'];
+
+/* ================== الحالة ================== */
+const chat   = document.getElementById('chat');
+const chips  = document.getElementById('chips');
+const search = document.getElementById('search');
+const clearBtn = document.getElementById('clearBtn');
+const statusEl = document.getElementById('status');
+const toast  = document.getElementById('toast');
+const msgIn  = document.getElementById('msg');
+
+let activeCat = 'الكل';
+let favs = new Set();
+try { favs = new Set(JSON.parse(localStorage.getItem('wa_cmds_favs') || '[]')); } catch(e){}
+
+/* ================== أدوات ================== */
+const esc = s => String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+const nowTime = () => {
+  const d = new Date();
+  let h = d.getHours(), m = d.getMinutes();
+  const ap = h < 12 ? 'ص' : 'م';
+  h = h % 12 || 12;
+  return h + ':' + String(m).padStart(2,'0') + ' ' + ap;
+};
+function saveFavs(){ try{ localStorage.setItem('wa_cmds_favs', JSON.stringify([...favs])); }catch(e){} }
+
+async function copyText(t){
+  try{
+    if(navigator.clipboard && window.isSecureContext){
+      await navigator.clipboard.writeText(t);
+      return true;
+    }
+    throw 0;
+  }catch(e){
+    try{
+      const ta = document.createElement('textarea');
+      ta.value = t; ta.setAttribute('readonly','');
+      ta.style.cssText = 'position:fixed;top:-1000px;opacity:0';
+      document.body.appendChild(ta);
+      ta.select(); ta.setSelectionRange(0, t.length);
+      const ok = document.execCommand('copy');
+      document.body.removeChild(ta);
+      return ok;
+    }catch(_){ return false; }
+  }
+}
+
+let toastTimer;
+function showToast(txt){
+  toast.textContent = txt;
+  toast.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=>toast.classList.remove('show'), 1600);
+}
+
+/* ================== الشرائح ================== */
+function buildChips(){
+  chips.innerHTML = CATS.map(c =>
+    `<button class="chip${c===activeCat?' active':''}" data-cat="${esc(c)}">${esc(c)}</button>`
+  ).join('');
+}
+chips.addEventListener('click', e => {
+  const b = e.target.closest('.chip');
+  if(!b) return;
+  activeCat = b.dataset.cat;
+  buildChips();
+  render();
+});
+
+/* ================== العرض ================== */
+function bubbleHTML(d){
+  const on = favs.has(d.n);
+  return `<div class="msg in">
+    <div class="bubble" data-cmd="${esc(d.c)}">
+      <div class="body">
+        <div class="cmd">${esc(d.c)}</div>
+        <div class="desc">${esc(d.d)}</div>
+        <div class="meta"><span class="num">#${d.n}</span><span>•</span><span>${esc(d.g)}</span></div>
+      </div>
+      <button class="star${on?' on':''}" data-fav="${d.n}" title="إضافة للمفضلة">${on?'★':'☆'}</button>
+    </div>
+  </div>`;
+}
+
+function render(){
+  const raw = search.value.trim();
+  const q = raw.replace(/^\//,'').toLowerCase();
+
+  const list = DATA.filter(d => {
+    const okCat = activeCat === 'الكل' ? true
+                : activeCat === '⭐ المفضلة' ? favs.has(d.n)
+                : d.g === activeCat;
+    if(!okCat) return false;
+    if(!q) return true;
+    return d.c.toLowerCase().includes(q)
+        || d.d.toLowerCase().includes(q)
+        || String(d.n) === q;
+  });
+
+  statusEl.textContent = list.length
+    ? `${list.length} أمر — انقر للنسخ`
+    : 'لا توجد نتائج';
+
+  let html = `<div class="syspill">🔒 مكتبتك المحلية · انقر على أي أمر ليُنسخ تلقائياً<br>يمكنك البحث أو تصفية التصنيفات من الأعلى</div>`;
+
+  if(!list.length){
+    html += `<div class="empty"><span>🔍</span>لا توجد أوامر مطابقة<br>جرّب كلمة أخرى أو اختر «الكل»</div>`;
+  } else {
+    html += list.map(bubbleHTML).join('');
+  }
+
+  chat.innerHTML = html;
+  chat.scrollTop = 0;
+}
+
+/* ================== التفاعل ================== */
+chat.addEventListener('click', e => {
+  const star = e.target.closest('.star');
+  if(star){
+    e.stopPropagation();
+    const n = Number(star.dataset.fav);
+    if(favs.has(n)) favs.delete(n); else favs.add(n);
+    saveFavs();
+    star.classList.toggle('on', favs.has(n));
+    star.textContent = favs.has(n) ? '★' : '☆';
+    showToast(favs.has(n) ? 'أُضيف إلى المفضلة ★' : 'أُزيل من المفضلة');
+    if(activeCat === '⭐ المفضلة') render();
+    return;
+  }
+
+  const b = e.target.closest('.bubble');
+  if(b && b.dataset.cmd){
+    const cmd = b.dataset.cmd;
+    b.classList.remove('sent');
+    void b.offsetWidth;
+    b.classList.add('sent');
+    copyText(cmd).then(ok => {
+      showToast(ok ? 'تم النسخ ✓ ' + cmd : 'تعذّر النسخ — انسخ يدوياً');
+    });
+    sendOut(cmd);
+  }
+});
+
+function sendOut(text){
+  const el = document.createElement('div');
+  el.className = 'msg out';
+  el.innerHTML = `<div class="bubble">
+      <div class="txt">${esc(text)}</div>
+      <div class="time">${nowTime()} <span class="ticks">✓✓</span></div>
+    </div>`;
+  chat.appendChild(el);
+  chat.scrollTop = chat.scrollHeight;
+}
+
+/* ================== البحث ================== */
+search.addEventListener('input', () => {
+  clearBtn.style.display = search.value ? 'block' : 'none';
+  render();
+});
+clearBtn.addEventListener('click', () => {
+  search.value = ''; clearBtn.style.display = 'none'; render(); search.focus();
+});
+
+/* ================== شريط الإرسال ================== */
+function handleSend(){
+  const v = msgIn.value.trim();
+  if(!v) return;
+  const cmd = v.startsWith('/') ? v : '/' + v;
+  sendOut(cmd);
+  copyText(cmd).then(ok => showToast(ok ? 'تم النسخ ✓' : 'تعذّر النسخ'));
+  msgIn.value = '';
+  msgIn.focus();
+}
+document.getElementById('sendBtn').addEventListener('click', handleSend);
+msgIn.addEventListener('keydown', e => { if(e.key === 'Enter'){ e.preventDefault(); handleSend(); } });
+
+/* ================== الوضع الليلي ================== */
+const themeBtn = document.getElementById('themeBtn');
+function applyTheme(dark){
+  document.body.classList.toggle('dark', dark);
+  themeBtn.textContent = dark ? '☀️' : '🌙';
+  document.querySelector('meta[name=theme-color]').setAttribute('content', dark ? '#202c33' : '#008069');
+}
+let darkPref = false;
+try{ darkPref = localStorage.getItem('wa_cmds_theme') === 'dark'; }catch(e){}
+if(!darkPref && window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches) darkPref = true;
+applyTheme(darkPref);
+
+themeBtn.addEventListener('click', () => {
+  const d = !document.body.classList.contains('dark');
+  applyTheme(d);
+  try{ localStorage.setItem('wa_cmds_theme', d ? 'dark' : 'light'); }catch(e){}
+});
+
+/* ================== تشغيل ================== */
+buildChips();
+render();
+</script>
+</body>
+</html>
